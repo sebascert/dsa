@@ -1,2 +1,67 @@
-# c-dsa
-data structures and algorithms in C
+# C Data Structures and Algorithms
+
+This repository provides a collection of common Data Structures and Algorithms
+implemented in C. [DSA_LIST.md](DSA_LIST.md) contains all the data structures
+and algorithms and corresponding dependencies.
+
+# Usage
+
+Import the code into your project or build a library with the dsa's you need,
+see [DSA_LIST.md](DSA_LIST.md) for the dependencies between dsa's.
+
+## Declaration Interface Format
+
+Data Structurers declarations consistently follow this format:
+```c
+typedef struct {
+    // fields
+} data_struct;
+
+data_struct data_struct_new(/*fields...*/);
+void data_struct_free(data_struct* data_struct);
+
+type data_struct_function(/*args...*/);
+```
+
+Algorithms declarations consistently follow this format:
+```c
+type algorithm(/*args...*/);
+```
+
+## Testing
+
+The project uses [criterion](https://github.com/Snaipe/Criterion) testing
+framework, check their corresponding installation. Each dsa in the `src`
+directory is accompanied by a corresponding set of unit tests located in the
+`tests` directory.
+
+compile and run:
+```bash
+# compile tests
+make tests
+
+# run the tests, check criterion docs for testing options
+make tests ARGS='<args>'
+# or
+./build/test_dsa <args>
+```
+
+## Cleaning after Compiling
+
+```bash
+# remove all object files
+make clean
+
+# also remove build/
+make clean-all
+```
+
+## Contributing
+
+Contributions are welcome! If you'd like to contribute to this repository,
+please fork the repository and submit a pull request with your changes. Be sure
+to follow the coding standards and formatting in `.clang-format`.
+
+## License
+
+c-dsa source code is available under the MIT License.
