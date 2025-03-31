@@ -3,7 +3,7 @@ CFLAGS := -Wall -Wextra
 CR_LFLAGS = -lcriterion
 
 # targets
-TARGET = dsa-ctest
+TARGET = test_dsa
 
 # parameters
 ARGS ?=
@@ -33,7 +33,7 @@ TESTS_OBJS = $(TESTS_FILES:.c=.o)
 all: $(TARGET)
 
 test: $(TARGET)
-	@echo "./$(BUILD_DIR)/$(TARGET) $(ARGS)"
+	@echo "running tests: ./$(BUILD_DIR)/$(TARGET) $(ARGS)"
 	@./$(BUILD_DIR)/$(TARGET) $(ARGS) || echo "exit with status code $$?"
 
 clean:
@@ -57,6 +57,3 @@ $(BUILD_DIR):
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
-$(TESTS_DIR)/%.o: $(TESTS_DIR)/%.c
-	$(CC) $(CFLAGS) $(CR_LFLAGS) -c $< -o $@
