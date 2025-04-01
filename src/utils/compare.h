@@ -1,0 +1,22 @@
+#ifndef UTILS_COMPARE_H
+#define UTILS_COMPARE_H
+
+// a < b <-> int < 0
+// a > b <-> int > 0
+// a == b <-> int == 0
+typedef int (*Compare)(const void *, const void *);
+
+// base type compare function generators
+
+#define COMPARE_BTYPE_DCL(type, func_name) \
+    int func_name(const void *a, const void *b)
+
+#define COMPARE_BTYPE_DEF(type, func_name) \
+    COMPARE_BTYPE_DCL(type, func_name) {   \
+        const type arg1 = *((type *)a);    \
+        const type arg2 = *((type *)b);    \
+        if (arg1 == arg2) return 0;        \
+        return (arg1 > arg2) ? 1 : -1;     \
+    }
+
+#endif /* ifndef UTILS_COMPARE_H */
