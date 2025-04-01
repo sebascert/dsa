@@ -1,5 +1,8 @@
 *.o
 
+core.*
+vgcore.*
+
 build/
 
 .cache/
