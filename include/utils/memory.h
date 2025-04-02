@@ -1,5 +1,5 @@
-#ifndef UTILS_MEMORY_H
-#define UTILS_MEMORY_H
+#ifndef DSA_UTILS_BUFFER_H
+#define DSA_UTILS_BUFFER_H
 
 #include <stddef.h>
 
@@ -14,4 +14,4 @@
 // no memory boundaries are checked
 void swap_buffer_elems(void *buffer, size_t memb_size, size_t a, size_t b);
 
-#endif /* ifndef UTILS_MEMORY_H */
+#endif /* ifndef DSA_UTILS_BUFFER_H */

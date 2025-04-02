@@ -1,5 +1,5 @@
-#ifndef UTILS_COMPARE_H
-#define UTILS_COMPARE_H
+#ifndef DSA_UTILS_COMPARE_H
+#define DSA_UTILS_COMPARE_H
 
 // base type compare function generators
 
@@ -14,4 +14,4 @@
         return (arg1 > arg2) ? 1 : -1;     \
     }
 
-#endif /* ifndef UTILS_COMPARE_H */
+#endif /* ifndef DSA_UTILS_COMPARE_H */

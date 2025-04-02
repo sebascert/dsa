@@ -13,9 +13,10 @@ see [DSA_LIST.md](DSA_LIST.md) for the dependencies between dsa's.
 
 Declarations of Algorithm functions are consistently prefixed by `dsa_`
 namespace, declarations related to Data Structures are prefixed by their name.
-common types are found in `src/types` which have no namespace but are intended
-to avoid collisions. Declarations in `src/utils` are internally used, although
-users can include them for extra utilities, but they have no namespace.
+common types are found in `include/types` which have no namespace but are
+intended to avoid collisions. Declarations in `include/utils` are internally
+used, although users can include them for extra utilities, but they have no
+namespace.
 
 ```c
 /*algorithm base interface*/
@@ -37,9 +38,9 @@ type data_struct_function(data_struct* data_struct, /*args...*/);
 ## Testing
 
 The project uses [criterion](https://github.com/Snaipe/Criterion) testing
-framework, check their corresponding installation. Each dsa in the `src`
-directory is accompanied by a corresponding set of unit tests located in the
-`tests` directory.
+framework, check their corresponding installation. Each dsa declaration
+`include/category/dsa` is accompanied by a corresponding set of unit tests
+located in `tests/category/dsa` directory.
 
 compile and run:
 ```bash

@@ -19,8 +19,10 @@ endif
 SRC_DIR := src
 TESTS_DIR := tests
 BUILD_DIR := build
+INCLUDE_DIR := include
 
-CFLAGS += -I './$(SRC_DIR)'
+INCLUDES = $(INCLUDE_DIR)/ $(dir $(wildcard $(INCLUDE_DIR)/*/))
+CFLAGS += $(addprefix -I, $(INCLUDES))
 
 # files and obj files
 FILES = $(shell find $(SRC_DIR) -name '*.c')
