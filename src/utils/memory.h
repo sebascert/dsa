@@ -12,6 +12,6 @@
 
 // swap elements in a buffer by indexes a and b
 // no memory boundaries are checked
-void buf_swap(void *buffer, size_t memb_size, size_t a, size_t b);
+void swap_buffer_elems(void *buffer, size_t memb_size, size_t a, size_t b);
 
 #endif /* ifndef UTILS_MEMORY_H */

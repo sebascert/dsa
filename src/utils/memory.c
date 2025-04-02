@@ -5,7 +5,7 @@
 
 #define swap_size 64
 
-void buf_swap(void* buffer, size_t memb_size, size_t a, size_t b) {
+void swap_buffer_elems(void* buffer, size_t memb_size, size_t a, size_t b) {
     if (a == b || memb_size == 0) return;
 
     unsigned char buf[swap_size];

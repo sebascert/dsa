@@ -1,11 +1,6 @@
 #ifndef UTILS_COMPARE_H
 #define UTILS_COMPARE_H
 
-// a < b <-> int < 0
-// a > b <-> int > 0
-// a == b <-> int == 0
-typedef int (*Compare)(const void *, const void *);
-
 // base type compare function generators
 
 #define COMPARE_BTYPE_DCL(type, func_name) \
