@@ -1,29 +1,52 @@
 #include "memory.h"
 
-#include <stdio.h>
 #include <string.h>
 
-#define swap_size 64
+bool is_arr_null(struct array* arr) {
+    return !arr || !arr->buffer || arr->size == 0 || arr->memb_size == 0;
+}
 
-void swap_buffer_elems(void* buffer, size_t memb_size, size_t a, size_t b) {
-    if (a == b || memb_size == 0) return;
+int swap(struct array* arr, size_t idx_a, size_t idx_b) {
+    if (is_arr_null(arr)) return 1;
+    if (idx_a >= arr->size || idx_b >= arr->size) return 1;
+    if (idx_a == idx_b) return 0;
 
-    unsigned char buf[swap_size];
+    unsigned char buf[SWAP_SIZE];
 
-    unsigned char* p1 = buf_idx(buffer, a, memb_size);
-    unsigned char* p2 = buf_idx(buffer, b, memb_size);
+    unsigned char* p1 = buf_idx(arr->buffer, idx_a, arr->memb_size);
+    unsigned char* p2 = buf_idx(arr->buffer, idx_b, arr->memb_size);
 
-    while (memb_size > swap_size) {
-        memcpy(buf, p1, swap_size);
-        memcpy(p1, p2, swap_size);
-        memcpy(p2, buf, swap_size);
+    size_t left = arr->memb_size;
+    while (left > SWAP_SIZE) {
+        memcpy(buf, p1, SWAP_SIZE);
+        memcpy(p1, p2, SWAP_SIZE);
+        memcpy(p2, buf, SWAP_SIZE);
 
-        memb_size -= swap_size;
-        p1 += swap_size;
-        p2 += swap_size;
+        left -= SWAP_SIZE;
+        p1 += SWAP_SIZE;
+        p2 += SWAP_SIZE;
     }
 
-    memcpy(buf, p1, memb_size);
-    memcpy(p1, p2, memb_size);
-    memcpy(p2, buf, memb_size);
+    memcpy(buf, p1, left);
+    memcpy(p1, p2, left);
+    memcpy(p2, buf, left);
+
+    return 0;
+}
+
+int swap_with_mbuffer(struct array* arr, void* memb_buffer, size_t idx_a,
+                      size_t idx_b) {
+    if (is_arr_null(arr)) return 1;
+    if (!memb_buffer) return 1;
+    if (idx_a >= arr->size || idx_b >= arr->size) return 1;
+    if (idx_a == idx_b) return 0;
+
+    unsigned char* p1 = buf_idx(arr->buffer, idx_a, arr->memb_size);
+    unsigned char* p2 = buf_idx(arr->buffer, idx_b, arr->memb_size);
+
+    memcpy(memb_buffer, p1, arr->memb_size);
+    memcpy(p1, p2, arr->memb_size);
+    memcpy(p2, memb_buffer, arr->memb_size);
+
+    return 0;
 }
