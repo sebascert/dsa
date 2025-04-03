@@ -1,5 +1,5 @@
-#ifndef DSA_ALLOCATOR_H
-#define DSA_ALLOCATOR_H
+#ifndef DSA_TYPES_ALLOCATOR_H
+#define DSA_TYPES_ALLOCATOR_H
 
 #include <stddef.h>
 
@@ -16,4 +16,4 @@ struct allocator {
 
 #define STDLIB_ALLOCATOR ((struct allocator){malloc, realloc, free})
 
-#endif /* ifndef DSA_ALLOCATOR_H */
+#endif /* ifndef DSA_TYPES_ALLOCATOR_H */
