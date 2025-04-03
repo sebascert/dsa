@@ -1,10 +1,6 @@
 #include <criterion/criterion.h>
-#include <criterion/internal/new_asserts.h>
 #include <criterion/new/assert.h>
 #include <criterion/theories.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "utils/memory.h"
 
@@ -16,8 +12,8 @@ Test(suite, buffer_index) {
     void* buffer = arr;
 
     for (size_t i = 0; i < sizeof(arr) / sizeof(int); i++, arr_ptr++) {
-        cr_assert(eq(int, arr[i], *(int*)BUF_IDX(buffer, i, sizeof(int))));
-        cr_assert(eq(ptr, arr_ptr, BUF_IDX(buffer, i, sizeof(int))));
+        cr_assert(eq(int, arr[i], *(int*)buf_idx(buffer, i, sizeof(int))));
+        cr_assert(eq(ptr, arr_ptr, buf_idx(buffer, i, sizeof(int))));
     }
 }
 
@@ -29,7 +25,7 @@ Test(suite, buffer_increment) {
     for (size_t i = 0; i < sizeof(arr) / sizeof(int); i++, arr_ptr++) {
         cr_assert(eq(int, arr[i], *(int*)buffer));
         cr_assert(eq(ptr, arr_ptr, buffer));
-        BUF_INC(buffer, 1, sizeof(int));
+        buf_inc(buffer, 1, sizeof(int));
     }
 }
 

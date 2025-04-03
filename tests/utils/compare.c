@@ -1,7 +1,6 @@
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 #include <criterion/theories.h>
-#include <float.h>
 #include <limits.h>
 
 #include "utils/compare.h"

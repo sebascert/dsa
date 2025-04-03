@@ -10,8 +10,8 @@ void swap_buffer_elems(void* buffer, size_t memb_size, size_t a, size_t b) {
 
     unsigned char buf[swap_size];
 
-    unsigned char* p1 = BUF_IDX(buffer, a, memb_size);
-    unsigned char* p2 = BUF_IDX(buffer, b, memb_size);
+    unsigned char* p1 = buf_idx(buffer, a, memb_size);
+    unsigned char* p2 = buf_idx(buffer, b, memb_size);
 
     while (memb_size > swap_size) {
         memcpy(buf, p1, swap_size);

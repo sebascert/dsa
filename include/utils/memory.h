@@ -4,11 +4,11 @@
 #include <stddef.h>
 
 // ith index of void pointer buffer by memb_size
-#define BUF_IDX(buffer, i, memb_size) \
+#define buf_idx(buffer, i, memb_size) \
     ((void *)((unsigned char *)(buffer) + ((i) * (memb_size))))
 
 // increment void pointer buffer by i by memb_size
-#define BUF_INC(buffer, i, memb_size) (buffer) = BUF_IDX(buffer, i, memb_size)
+#define buf_inc(buffer, i, memb_size) (buffer) = buf_idx(buffer, i, memb_size)
 
 // swap elements in a buffer by indexes a and b
 // no memory boundaries are checked
