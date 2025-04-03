@@ -1,7 +1,8 @@
 #ifndef DSA_TYPES_ALLOCATOR_H
 #define DSA_TYPES_ALLOCATOR_H
 
-#include <stddef.h>
+#include <memory.h>
+#include <stdlib.h>
 
 typedef void* (*Malloc)(size_t);
 typedef void* (*Realloc)(void*, size_t);
@@ -14,6 +15,6 @@ struct allocator {
     Free free;
 };
 
-#define STDLIB_ALLOCATOR ((struct allocator){malloc, realloc, free})
+const struct allocator stdlib_allocator = {malloc, realloc, free};
 
 #endif /* ifndef DSA_TYPES_ALLOCATOR_H */
