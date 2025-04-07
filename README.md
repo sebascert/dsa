@@ -38,7 +38,7 @@ struct data_struct{
 
 //default to stdlib_allocator
 struct data_struct data_struct_new(/*fields...*/);
-struct data_struct data_struct_new_with_allocator(/*fields...*/, struct allocator);
+struct data_struct data_struct_new_with_allocator(/*fields...*/, const struct* allocator);
 void data_struct_free(struct data_struct*);
 
 type data_struct_function(struct data_struct*, /*args...*/);
