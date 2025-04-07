@@ -6,10 +6,10 @@
 // growth strategy
 typedef size_t (*Growth)(size_t);
 
-size_t cuadratic_growth(size_t n);
+size_t exponential_growth(size_t n);
 
-#define POLYNOMIC_M_DEGREE 3
-size_t polynomic_m_growth(size_t n);
+#define EXPONENTIAL_BASE_M 3
+size_t exponential_m_growth(size_t n);
 
 size_t complete_binary_tree_growth(size_t n);
 
