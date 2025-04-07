@@ -34,7 +34,7 @@ struct data_struct{
 
 // null constant for data_struct
 // treated as a NULL pointer by data_struct_function
-#define NULL_DATA_STRUCT {nulled_fields...}
+const struct data_struct NULL_DATA_STRUCT {nulled_fields...}
 
 //default to stdlib_allocator
 struct data_struct data_struct_new(/*fields...*/);
