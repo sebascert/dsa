@@ -1,5 +1,20 @@
 build/
 
+# docs
+doxygen/
+docs/build/
+
+# python env
+venv
+.venv
+pyvenv
+.pyvenv
+
+# python cache
+*.py[cod]
+__pycache__/
+.mypy_cache
+
 # clangd
 .cache/
 compile_commands.json

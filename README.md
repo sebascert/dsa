@@ -1,13 +1,12 @@
-# C Data Structures and Algorithms
+# Data Structures & Algorithms in C (DSA)
 
-DSA is a collection of common Data Structures and Algorithms implemented in
-C. [DSA_LIST.md](DSA_LIST.md) contains all the data structures and algorithms
-and corresponding dependencies.
+This is the repository for the **DSA library**. The library is a collection
+of common Data Structures and Algorithms implemented in C, along with multiple
+utilities.
 
 # Usage
 
-Import the code into your project or build a library with the dsa's you need,
-see [DSA_LIST.md](DSA_LIST.md) for the dependencies between dsa's.
+Import the code into your project or build a library with the dsa's you need.
 
 ## Declaration Interface Format
 
@@ -62,16 +61,6 @@ make tests ARGS='<args>'
 ./build/test_dsa <args>
 ```
 
-## Cleaning after Compiling
-
-```bash
-# remove all object files
-make clean
-
-# also remove build/
-make clean-all
-```
-
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to this repository,
@@ -80,4 +69,4 @@ to follow the coding standards and formatting in `.clang-format`.
 
 ## License
 
-c-dsa source code is available under the MIT License.
+DSA source code is available under the MIT License.
