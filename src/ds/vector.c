@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "dsa/data_structs/vector.h"
+#include "dsa/ds/vector.h"
 #include "dsa/types/array.h"
 #include "dsa/utils/memory.h"
 

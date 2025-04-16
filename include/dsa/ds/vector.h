@@ -3,8 +3,8 @@
  * the vector data structure provides a dynamic array
  * */
 
-#ifndef DSA_DATA_STRUCT_VECTOR_H
-#define DSA_DATA_STRUCT_VECTOR_H
+#ifndef DSA_DS_VECTOR_H
+#define DSA_DS_VECTOR_H
 
 #include <stdbool.h>
 
@@ -69,12 +69,4 @@ struct vector {
     struct array arr;
 };
 
-static const struct vector NULL_VECTOR = {
-    .size = 0,
-    .memb_buffer = NULL,
-    .growth = NULL,
-    .arr = NULL_ARRAY,
-    .alloc = &stdlib_allocator,
-};
-
-#endif /* ifndef DSA_DATA_STRUCT_VECTOR_H */
+#endif /* ifndef DSA_DS_VECTOR_H */

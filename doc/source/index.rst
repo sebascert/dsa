@@ -17,7 +17,7 @@ This section contains the reference for the DSA's API, generated from the header
 
 Data Structures
 ---------------
-.. doxygenfile:: include/data_structs/vector.h
+.. doxygenfile:: include/ds/vector.h
    :project: dsa
 
 Types
