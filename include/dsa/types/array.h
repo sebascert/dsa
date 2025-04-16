@@ -10,10 +10,6 @@ struct array {
     size_t memb_size;
 };
 
-static const struct array NULL_ARRAY = {
-    .buffer = NULL,
-    .size = 0,
-    .memb_size = 0,
-};
+extern const struct array NULL_ARRAY;
 
 #endif /* ifndef DSA_TYPES_ARRAY_H */

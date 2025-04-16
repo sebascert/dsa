@@ -3,8 +3,15 @@
 #include <string.h>
 
 #include "dsa/ds/vector.h"
-#include "dsa/types/array.h"
 #include "dsa/utils/memory.h"
+
+const struct vector NULL_VECTOR = {
+    .size = 0,
+    .memb_buffer = NULL,
+    .growth = NULL,
+    .arr = {0},
+    .alloc = &stdlib_allocator,
+};
 
 struct vector vector_new(size_t size, size_t memb_size, Growth growth) {
     return vector_new_with_allocator(size, memb_size, growth,

@@ -15,6 +15,6 @@ struct allocator {
     Free free;
 };
 
-const struct allocator stdlib_allocator = {malloc, realloc, free};
+extern const struct allocator stdlib_allocator;
 
 #endif /* ifndef DSA_TYPES_ALLOCATOR_H */

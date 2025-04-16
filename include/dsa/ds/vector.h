@@ -8,10 +8,13 @@
 
 #include <stdbool.h>
 
+#include "dsa/types/allocator.h"
+#include "dsa/types/array.h"
 #include "dsa/types/growth.h"
-#include "dsa/types/types.h"
 
 struct vector;
+
+extern const struct vector NULL_VECTOR;
 
 // construct new vector structure with stdlib allocator
 struct vector vector_new(size_t size, size_t memb_size, Growth growth);
