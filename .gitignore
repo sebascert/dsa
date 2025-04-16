@@ -1,4 +1,5 @@
 build/
+dsa_list
 
 # docs
 doxygen/

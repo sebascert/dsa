@@ -1,14 +1,30 @@
-# Data Structures & Algorithms in C (DSA)
+# DSA Library
 
-This is the repository for the **DSA library**. The library is a collection
-of common Data Structures and Algorithms implemented in C, along with multiple
-utilities.
+**DSA Library** offers a collection of common Data Structures & Algorithms
+in C, along with multiple utilities.
 
 # Usage
 
-Import the code into your project or build a library with the dsa's you need.
+The library includes the dsa's specified in `dsa_list` file, listing paths to
+dsa's headers with striped include/dsa/ and .h from path to dsa header, as in:
+```
+include/dsa/categories/*/header.h
+data_structures/vector
+sorting/quicksort
+```
+If `dsa_list` is not created all dsa's are included into the library.
 
-## Declaration Interface Format
+To install the library do:
+```bash
+make install
+```
+
+To compile the library into `build/libdsa.a` do:
+```bash
+make lib
+```
+
+## Declaration Interface
 
 The interface for algorithms consists of declarations of Algorithm functions
 prefixed by `dsa_` namespace.
@@ -50,23 +66,19 @@ framework, check their corresponding installation. Each dsa declaration
 `include/category/dsa` is accompanied by a corresponding set of unit tests
 located in `tests/category/dsa` directory.
 
-compile and run:
+To compile and run the tests do:
 ```bash
-# compile tests
-make tests
+make test
 
-# run the tests, check criterion docs for testing options
-make tests ARGS='<args>'
-# or
-./build/test_dsa <args>
+# check criterion docs for testing options
+make run-test ARGS='args...'
 ```
 
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to this repository,
-please fork the repository and submit a pull request with your changes. Be sure
-to follow the coding standards and formatting in `.clang-format`.
+please follow the guide on [contributing](CONTRIBUTING.md).
 
 ## License
 
-DSA source code is available under the MIT License.
+DSA library source code is available under the MIT License.

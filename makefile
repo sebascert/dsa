@@ -1,63 +1,93 @@
-CC := gcc
-CFLAGS := -Wall -Wextra
-CR_LFLAGS = -lcriterion
-
-# targets
-TEST_TARGET = test_dsa
-
-# parameters
-ARGS ?=
-RELEASE ?= 0
-
-ifeq ($(RELEASE), 1)
-	CFLAGS += -O2
-else
-	CFLAGS += -g -DDEBUG
-endif
+# arguments for running programs
+args ?=
 
 # directories
-SRC_DIR := src
-TESTS_DIR := tests
-BUILD_DIR := build
-INCLUDE_DIR := include
+include_dir := include
+src_dir     := src
+test_dir    := test
+build_dir   := build
+script_dir  := script
 
-INCLUDES = $(INCLUDE_DIR)/ $(dir $(wildcard $(INCLUDE_DIR)/*/))
-CFLAGS += $(addprefix -I, $(INCLUDES))
+# targets
+lib_target   := $(build_dir)/libdsa.a
+test_target  := $(build_dir)/dsa_test
 
-# files and obj files
-FILES = $(shell find $(SRC_DIR) -name '*.c')
-OBJS = $(FILES:.c=.o)
+# selected dsa or empty if script fails
+selected_dsa := $(shell python3 $(script_dir)/selected_dsa.py dsa_list 2>/dev/null || echo)
 
-TESTS_FILES = $(shell find $(TESTS_DIR) -name '*.c')
-TESTS_OBJS = $(TESTS_FILES:.c=.o)
+# sources and headers
+headers      := $(shell find $(include_dir) -name '*.h')
+core_headers := $(shell find $(include_dir)/dsa/types $(include_dir)/dsa/utils -name '*.h')
+sources      := $(shell find $(src_dir) -name '*.c')
+core_sources := $(shell find $(src_dir)/utils -name '*.c')
+test         := $(shell find $(test_dir) -name '*.c')
 
-# execution rules
-all: $(TEST_TARGET)
+# objects
+source_objs   := $(sources:.c=.o)
+test_objs     := $(test:.c=.o)
 
-test: $(TEST_TARGET)
-	@echo "running tests: ./$(BUILD_DIR)/$(TEST_TARGET) $(ARGS)"
-	@./$(BUILD_DIR)/$(TEST_TARGET) $(ARGS) || echo "exit with status code $$?"
+lib_core_objs := $(core_sources:.c=.o)
+lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
+lib_includes  := $(addprefix $(include_dir)/, $(addsuffix .o, $(selected_dsa)))
 
-clean:
-	@rm -f $(OBJS) $(TESTS_OBJS)
+# c setup
+CC        := gcc
+AR        := ar
+CFLAGS    := -Wall -Wextra -g -std=c99 -I $(include_dir)
 
-clean-all: clean
-	@rm -r $(BUILD_DIR) 2> /dev/null || true
+# target rules
+all: lib
+lib: $(lib_target)
+test: $(test_target)
 
-.PHONY: all test clean clean-all
+install: $(lib_target)
+	@mkdir -p /usr/local/include/dsa
+	@cp $(lib_includes) /usr/local/include/dsa/
+	@cp $(lib_target) /usr/local/lib/
+
+run-test: $(test_target)
+	@echo "./$(test_target) $(args)"
+	@./$(test_target) $(ARGS)
+
+.PHONY: all lib test install run-test
+
+# utils rules
+format:
+	clang-format -i $(headers) $(sources) $(test)
+
+clangdb:
+	@(MAKE) clean-all
+	@bear -- make
+
+.PHONY: run-test clangdb
 
 # compilation rules
-$(TEST_TARGET): $(BUILD_DIR)/$(TEST_TARGET)
-.PHONY: $(TEST_TARGET)
+$(lib_target): $(lib_objs) $(lib_core_objs) | $(build_dir)
+	$(AR) rcs $@ $^
+	@echo "build lib to: $@"
 
-$(BUILD_DIR)/$(TEST_TARGET): $(OBJS) $(TESTS_OBJS) | $(BUILD_DIR)
-	@$(CC) $(CFLAGS) $(CR_LFLAGS) $(OBJS) $(TESTS_OBJS) -o $@
-	@echo "target: $@"
-
-# background rules
-$(BUILD_DIR):
-	@mkdir -p $(BUILD_DIR)
+$(test_target): $(source_objs) $(test_objs) | $(build_dir)
+	$(CC) $(CFLAGS) -lcriterion $(source_objs) $(test_objs) -o $@
+	@echo "build test to: $@"
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "compiling: $<"
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(build_dir):
+	@mkdir -p $(build_dir)
+
+# clean rules
+clean:
+	@find . -name '*.o' -delete
+	@rm -rf $(build_dir) 2> /dev/null
+
+clean-docs:
+	@rm -rf doxygen
+
+clean-clangdb:
+	@rm -f compile_commands.js
+	@rm -rf .cache/clangd
+
+clean-all: clean clean-docs clean-clangdb
+
+.PHONY: clean clean-docs clean-clangdb clean-all
