@@ -19,6 +19,7 @@ selected_dsa := $(shell python3 $(script_dir)/selected_dsa.py dsa_list 2>/dev/nu
 # sources and headers
 headers      := $(shell find $(include_dir) -name '*.h')
 core_headers := $(shell find $(include_dir)/dsa/types $(include_dir)/dsa/utils -name '*.h')
+lib_headers  := $(addprefix $(include_dir)/dsa/, $(addsuffix .h, $(selected_dsa)))
 sources      := $(shell find $(src_dir) -name '*.c')
 core_sources := $(shell find $(src_dir)/utils -name '*.c')
 test         := $(shell find $(test_dir) -name '*.c')
@@ -29,7 +30,6 @@ test_objs     := $(test:.c=.o)
 
 lib_core_objs := $(core_sources:.c=.o)
 lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
-lib_includes  := $(addprefix $(include_dir)/, $(addsuffix .o, $(selected_dsa)))
 
 # env setup
 CC        := gcc
@@ -40,15 +40,18 @@ MAKEFLAGS += --no-print-directory
 
 PYVENV    := .venv
 
+PREFIX    := /usr/local
+
 # target rules
 all: lib
 lib: $(lib_target)
 test: $(test_target)
 
 install: $(lib_target)
-	@mkdir -p /usr/local/include/dsa
-	@cp $(lib_includes) /usr/local/include/dsa/
-	@cp $(lib_target) /usr/local/lib/
+	@mkdir -p $(PREFIX)/include/dsa
+	@rm -r $(PREFIX)/include/dsa/
+	@rsync -R $(core_headers) $(lib_headers) $(PREFIX)/
+	@cp $(lib_target) $(PREFIX)/lib/
 
 run-test: $(test_target)
 	@echo "./$(test_target) $(args)"
