@@ -3,8 +3,8 @@
 #include <criterion/new/assert.h>
 #include <criterion/theories.h>
 
-#include "types/array.h"
-#include "utils/memory.h"
+#include "dsa/types/array.h"
+#include "dsa/utils/memory.h"
 
 #define suite utils_memory
 

@@ -3,7 +3,7 @@
 #include <criterion/theories.h>
 #include <limits.h>
 
-#include "utils/compare.h"
+#include "dsa/utils/compare.h"
 
 #define suite utils_compare
 

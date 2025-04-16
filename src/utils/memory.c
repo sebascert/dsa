@@ -1,6 +1,6 @@
-#include "memory.h"
-
 #include <string.h>
+
+#include "dsa/utils/memory.h"
 
 bool is_arr_null(struct array* arr) {
     return !arr || !arr->buffer || arr->size == 0 || arr->memb_size == 0;

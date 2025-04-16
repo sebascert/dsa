@@ -1,10 +1,10 @@
-#include "array.h"
-#include "memory.h"
-#include "vector.h"
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "dsa/data_structs/vector.h"
+#include "dsa/types/array.h"
+#include "dsa/utils/memory.h"
 
 struct vector vector_new(size_t size, size_t memb_size, Growth growth) {
     return vector_new_with_allocator(size, memb_size, growth,
