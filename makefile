@@ -7,6 +7,7 @@ src_dir     := src
 test_dir    := test
 build_dir   := build
 script_dir  := script
+doc_dir     := doc
 
 # targets
 lib_target   := $(build_dir)/libdsa.a
@@ -30,10 +31,14 @@ lib_core_objs := $(core_sources:.c=.o)
 lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
 lib_includes  := $(addprefix $(include_dir)/, $(addsuffix .o, $(selected_dsa)))
 
-# c setup
+# env setup
 CC        := gcc
 AR        := ar
 CFLAGS    := -Wall -Wextra -g -std=c99 -I $(include_dir)
+
+MAKEFLAGS += --no-print-directory
+
+PYVENV    := .venv
 
 # target rules
 all: lib
@@ -53,13 +58,17 @@ run-test: $(test_target)
 
 # utils rules
 format:
-	clang-format -i $(headers) $(sources) $(test)
+	@clang-format -i $(headers) $(sources) $(test)
 
 clangdb:
-	@(MAKE) clean-all
+	@$(MAKE) clean-all
 	@bear -- make
 
-.PHONY: run-test clangdb
+doc: $(PYVENV)
+	@doxygen
+	@$(PYVENV)/bin/sphinx-build $(doc_dir)/source/ $(doc_dir)/build/
+
+.PHONY: run-test clangdb doc
 
 # compilation rules
 $(lib_target): $(lib_objs) $(lib_core_objs) | $(build_dir)
@@ -76,18 +85,26 @@ $(test_target): $(source_objs) $(test_objs) | $(build_dir)
 $(build_dir):
 	@mkdir -p $(build_dir)
 
+$(PYVENV):
+	@virtualenv $(PYVENV)
+	@$(PYVENV)/bin/pip3 install -r requirements.txt
+
 # clean rules
 clean:
 	@find . -name '*.o' -delete
-	@rm -rf $(build_dir) 2> /dev/null
+	@rm -rf $(build_dir)
 
 clean-docs:
 	@rm -rf doxygen
+	@rm -rf $(doc_dir)/build
 
 clean-clangdb:
-	@rm -f compile_commands.js
+	@rm -f compile_commands.json
 	@rm -rf .cache/clangd
 
-clean-all: clean clean-docs clean-clangdb
+clean-pyvenv:
+	@rm -rf $(PYVENV)
+
+clean-all: clean clean-docs clean-clangdb clean-pyvenv
 
 .PHONY: clean clean-docs clean-clangdb clean-all
