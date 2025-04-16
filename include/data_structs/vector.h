@@ -8,8 +8,8 @@
 
 #include <stdbool.h>
 
+#include "types/growth.h"
 #include "types/types.h"
-#include "utils/growth.h"
 
 struct vector;
 

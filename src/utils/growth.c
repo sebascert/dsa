@@ -1,4 +1,4 @@
-#include "growth.h"
+#include "utils/growth.h"
 
 size_t exponential_growth(size_t n) {
     return n * 2;
