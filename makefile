@@ -49,7 +49,7 @@ test: $(test_target)
 
 install: $(lib_target)
 	@mkdir -p $(PREFIX)/include/dsa
-	@rm -r $(PREFIX)/include/dsa/
+	@rm -rf $(PREFIX)/include/dsa/
 	@rsync -R $(core_headers) $(lib_headers) $(PREFIX)/
 	@cp $(lib_target) $(PREFIX)/lib/
 
@@ -64,7 +64,7 @@ format:
 	@clang-format -i $(headers) $(sources) $(test)
 
 clangdb:
-	@$(MAKE) clean-all
+	@$(MAKE) clean
 	@bear -- make
 
 doc: $(PYVENV)
@@ -97,17 +97,17 @@ clean:
 	@find . -name '*.o' -delete
 	@rm -rf $(build_dir)
 
-clean-docs:
-	@rm -rf doxygen
-	@rm -rf $(doc_dir)/build
-
 clean-clangdb:
 	@rm -f compile_commands.json
 	@rm -rf .cache/clangd
 
+clean-docs:
+	@rm -rf doxygen
+	@rm -rf $(doc_dir)/build
+
 clean-pyvenv:
 	@rm -rf $(PYVENV)
 
-clean-all: clean clean-docs clean-clangdb clean-pyvenv
+clean-all: clean clean-clangdb clean-docs clean-pyvenv
 
 .PHONY: clean clean-docs clean-clangdb clean-all
