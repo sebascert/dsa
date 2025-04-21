@@ -147,7 +147,7 @@ int vector_pop(struct vector* vec)
     return vector_remove(vec, vec->size - 1);
 }
 
-static inline bool vector_overflow(struct vector* vec, size_t size)
+inline bool vector_overflow(struct vector* vec, size_t size)
 {
     return size > vec->arr.size;
 }

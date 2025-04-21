@@ -53,7 +53,7 @@ int vector_append(struct vector* vec, void* elem);
 int vector_pop(struct vector* vec);
 
 // check if size would overflow vector underlying array
-static inline bool vector_overflow(struct vector* vec, size_t size);
+extern inline bool vector_overflow(struct vector* vec, size_t size);
 
 // resizes the vector to given size, reallocates capacity by Growth function
 // truncates elements if given size is less than current
