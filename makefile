@@ -49,7 +49,6 @@ lib: $(lib_target)
 test: $(test_target)
 
 install: $(lib_target)
-	@mkdir -p $(PREFIX)/include/dsa
 	@rm -rf $(PREFIX)/include/dsa/
 	@rsync -R $(core_headers) $(lib_headers) $(PREFIX)/
 	@cp $(lib_target) $(PREFIX)/lib/
@@ -65,7 +64,7 @@ format:
 	@clang-format -i $(headers) $(sources) $(test)
 
 lint:
-	#exclude tests as generated code from criterion has too many warns
+	# exclude tests as generated code from criterion has too many warns
 	@clang-tidy $(headers) $(sources) -p . -- -std=$(CSTD)
 
 clangdb:
