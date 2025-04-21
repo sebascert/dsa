@@ -1,10 +1,10 @@
 #ifndef DSA_UTILS_MEMORY_H
 #define DSA_UTILS_MEMORY_H
 
+#include "dsa/types/array.h"
+
 #include <stdbool.h>
 #include <stddef.h>
-
-#include "dsa/types/array.h"
 
 // ith index of void pointer buffer by memb_size
 #define buf_idx(buffer, i, memb_size) \

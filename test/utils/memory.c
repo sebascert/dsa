@@ -1,17 +1,19 @@
+#include "dsa/utils/memory.h"
+
+#include "dsa/types/array.h"
+
 #include <criterion/criterion.h>
 #include <criterion/internal/new_asserts.h>
 #include <criterion/new/assert.h>
 #include <criterion/theories.h>
-
-#include "dsa/types/array.h"
-#include "dsa/utils/memory.h"
 
 #define suite utils_memory
 
 #define BUFFER_SIZE 5
 #define BUFFER_ELEMS 0, 1, 2, 3, 4
 
-Test(suite, buffer_index) {
+Test(suite, buffer_index)
+{
     int arr[BUFFER_SIZE] = {BUFFER_ELEMS};
     int* arr_ptr = arr;
     void* buffer = arr;
@@ -22,7 +24,8 @@ Test(suite, buffer_index) {
     }
 }
 
-Test(suite, buffer_increment) {
+Test(suite, buffer_increment)
+{
     int arr[BUFFER_SIZE] = {BUFFER_ELEMS};
     int* arr_ptr = arr;
     void* buffer = arr;
@@ -34,7 +37,8 @@ Test(suite, buffer_increment) {
     }
 }
 
-Test(suite, swap_return_codes) {
+Test(suite, swap_return_codes)
+{
     char buffer[BUFFER_SIZE] = {BUFFER_ELEMS};
     char memb_buffer;
 
@@ -76,7 +80,8 @@ Test(suite, swap_return_codes) {
     };                                                                     \
                                                                            \
     Theory((size_t idx0, size_t idx1), suite,                              \
-           swap_##memb_size##byte_elem_theory) {                           \
+           swap_##memb_size##byte_elem_theory)                             \
+    {                                                                      \
         char buffer[BUFFER_SIZE][memb_size];                               \
                                                                            \
         for (size_t i = 0; i < BUFFER_SIZE; i++) {                         \

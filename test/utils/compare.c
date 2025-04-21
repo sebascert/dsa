@@ -1,9 +1,10 @@
+#include "dsa/utils/compare.h"
+
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 #include <criterion/theories.h>
-#include <limits.h>
 
-#include "dsa/utils/compare.h"
+#include <limits.h>
 
 #define suite utils_compare
 
@@ -26,7 +27,8 @@ static COMPARE_BTYPE_DEF(unsigned long long, compare_ulonglong_theory);
         DataPoints(type, __VA_ARGS__),                                \
     };                                                                \
                                                                       \
-    Theory((type arg0, type arg1), suite, func) {                     \
+    Theory((type arg0, type arg1), suite, func)                       \
+    {                                                                 \
         int expected = (arg0 == arg1) ? 0 : ((arg0 > arg1) ? 1 : -1); \
         cr_assert(eq(int, func(&arg0, &arg1), expected));             \
         cr_assert(eq(int, func(&arg1, &arg0), -expected));            \

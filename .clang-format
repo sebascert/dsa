@@ -1,22 +1,26 @@
 BasedOnStyle: Google
 
-IncludeIsMainRegex: '(_test)?\.(h|hpp)$'
-IncludeIsMainSourceRegex: '(_test)?\.(c|cpp)$'
+IncludeIsMainRegex: "$"
 SortIncludes: true
 IncludeBlocks: Regroup
 
 IncludeCategories:
-    # Local includes within the same directory
-  - Regex: '^"[^/]+.h"'
+    # Project headers
+  - Regex: '^".*\.h"$'
     Priority: 1
+    # Test framework headers
+  - Regex: '^<criterion/.*\.h>$'
+    Priority: 2
     # System headers
   - Regex: '^<.*\.h>$'
-    Priority: 2
+    Priority: 3
     # Any other include
   - Regex: '.*'
-    Priority: 3
+    Priority: 4
 
 IndentWidth: 4
-UseTab: Never
 
-AllowShortFunctionsOnASingleLine: None
+BreakBeforeBraces: Linux
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+ColumnLimit: 80

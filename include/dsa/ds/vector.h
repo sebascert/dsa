@@ -6,11 +6,11 @@
 #ifndef DSA_DS_VECTOR_H
 #define DSA_DS_VECTOR_H
 
-#include <stdbool.h>
-
 #include "dsa/types/allocator.h"
 #include "dsa/types/array.h"
 #include "dsa/types/growth.h"
+
+#include <stdbool.h>
 
 struct vector;
 
