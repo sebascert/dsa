@@ -89,8 +89,7 @@ void* vector_index(const struct vector* vec, size_t idx)
 
 int vector_swap(struct vector* vec, size_t idx_a, size_t idx_b)
 {
-    void *a, *b;
-    if (!(a = vector_index(vec, idx_a)) || !(b = vector_index(vec, idx_b)))
+    if (!vector_index(vec, idx_a) || !vector_index(vec, idx_b))
         return 1;
 
     swap_with_mbuffer(&vec->arr, vec->memb_buffer, idx_a, idx_b);

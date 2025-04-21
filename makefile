@@ -33,8 +33,9 @@ lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
 
 # env setup
 CC        := gcc
+CSTD      := c99
 AR        := ar
-CFLAGS    := -Wall -Wextra -g -std=c99 -I $(include_dir)
+CFLAGS    := -Wall -Wextra -g -std=$(CSTD) -I $(include_dir)
 
 MAKEFLAGS += --no-print-directory
 
@@ -62,6 +63,10 @@ run-test: $(test_target)
 # utils rules
 format:
 	@clang-format -i $(headers) $(sources) $(test)
+
+lint:
+	#exclude tests as generated code from criterion has too many warns
+	@clang-tidy $(headers) $(sources) -p . -- -std=$(CSTD)
 
 clangdb:
 	@$(MAKE) clean

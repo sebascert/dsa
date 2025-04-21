@@ -1,7 +1,5 @@
 #include "dsa/utils/growth.h"
 
-#include "dsa/types/types.h"
-
 size_t exponential_growth(size_t n)
 {
     return n * 2;
