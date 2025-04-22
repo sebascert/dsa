@@ -11,18 +11,16 @@ const struct vector NULL_VECTOR = {
     .memb_buffer = NULL,
     .growth = NULL,
     .arr = {0},
-    .alloc = &stdlib_allocator,
 };
 
 struct vector vector_new(size_t size, size_t memb_size, Growth growth)
 {
-    return vector_new_with_allocator(size, memb_size, growth,
-                                     &stdlib_allocator);
+    return vector_new_with_alloc(size, memb_size, growth, &stdlib_allocator);
 }
 
-struct vector vector_new_with_allocator(size_t size, size_t memb_size,
-                                        Growth growth,
-                                        const struct allocator* alloc)
+struct vector vector_new_with_alloc(size_t size, size_t memb_size,
+                                    Growth growth,
+                                    const struct allocator* alloc)
 {
     if (size == 0 || memb_size == 0 || !growth || !alloc)
         return NULL_VECTOR;
@@ -41,25 +39,38 @@ struct vector vector_new_with_allocator(size_t size, size_t memb_size,
         .size = size,
         .memb_buffer = memb_buffer,
         .growth = growth,
-        .arr = {.buffer = buffer, .size = size, .memb_size = memb_size},
-        .alloc = alloc,
+        .arr =
+            {
+                .buffer = buffer,
+                .size = size,
+                .memb_size = memb_size,
+                .alloc = alloc,
+            },
     };
 }
 
 void vector_free(struct vector* vec)
 {
-    vec->alloc->free(vec->memb_buffer);
-    vec->alloc->free(vec->arr.buffer);
+    if (vector_is_null(vec))
+        return;
+
+    vec->arr.alloc->free(vec->memb_buffer);
+    vec->arr.alloc->free(vec->arr.buffer);
     memcpy(vec, &NULL_VECTOR, sizeof(struct vector));
 }
 
-struct vector vector_from_array(struct array* arr, Growth growth,
-                                const struct allocator* alloc)
+inline bool vector_is_null(const struct vector* vec)
 {
-    if (is_arr_null(arr) || !growth || !alloc)
+    return !vec || !vec->memb_buffer || !vec->growth ||
+           array_is_null(&vec->arr);
+}
+
+struct vector vector_from_array(struct array* arr, Growth growth)
+{
+    if (array_is_null(arr) || !growth)
         return NULL_VECTOR;
 
-    void* memb_buffer = alloc->malloc(arr->memb_size);
+    void* memb_buffer = arr->alloc->malloc(arr->memb_size);
     if (!memb_buffer)
         return NULL_VECTOR;
 
@@ -71,7 +82,6 @@ struct vector vector_from_array(struct array* arr, Growth growth,
         .memb_buffer = memb_buffer,
         .growth = growth,
         .arr = vec_arr,
-        .alloc = alloc,
     };
 }
 
@@ -82,29 +92,37 @@ const struct array* vector_to_array(struct vector* vec)
 
 void* vector_index(const struct vector* vec, size_t idx)
 {
-    if (vec->size >= idx)
+    if (vector_is_null(vec) || vec->size >= idx)
         return NULL;
+
     return buf_idx(vec->arr.buffer, idx, vec->arr.memb_size);
 }
 
 int vector_swap(struct vector* vec, size_t idx_a, size_t idx_b)
 {
-    if (!vector_index(vec, idx_a) || !vector_index(vec, idx_b))
+    if (vector_is_null(vec))
         return 1;
+    if (idx_a >= vec->size || idx_b >= vec->size)
+        return 2;
 
-    swap_with_mbuffer(&vec->arr, vec->memb_buffer, idx_a, idx_b);
+    array_swap_with_mbuffer(&vec->arr, vec->memb_buffer, idx_a, idx_b);
 
     return 0;
 }
 
-int vector_insert(struct vector* vec, void* elem, size_t idx)
+int vector_insert(struct vector* vec, const void* elem, size_t idx)
 {
-    void* indexed;
-    if (!elem || (!(indexed = vector_index(vec, idx)) && idx != vec->size))
+    if (vector_is_null(vec))
         return 1;
+    if (!elem)
+        return 4;
 
-    if (!vector_resize(vec, vec->size + 1))
-        return 1;
+    void* indexed = vector_index(vec, idx);
+    if (!indexed && idx != vec->size)
+        return 2;
+
+    if (vector_set_size(vec, vec->size + 1) != 0)
+        return 3;
 
     size_t memb_size = vec->arr.memb_size;
 
@@ -123,9 +141,12 @@ int vector_insert(struct vector* vec, void* elem, size_t idx)
 
 int vector_remove(struct vector* vec, size_t idx)
 {
-    void* indexed;
-    if (!(indexed = vector_index(vec, idx)))
+    if (vector_is_null(vec))
         return 1;
+
+    void* indexed = vector_index(vec, idx);
+    if (!indexed)
+        return 2;
 
     vec->size--;
 
@@ -137,7 +158,7 @@ int vector_remove(struct vector* vec, size_t idx)
     return 0;
 }
 
-int vector_append(struct vector* vec, void* elem)
+int vector_append(struct vector* vec, const void* elem)
 {
     return vector_insert(vec, elem, vec->size);
 }
@@ -149,42 +170,46 @@ int vector_pop(struct vector* vec)
 
 inline bool vector_overflow(struct vector* vec, size_t size)
 {
-    return size > vec->arr.size;
+    return vector_is_null(vec) || size > vec->arr.size;
 }
 
-int vector_resize(struct vector* vec, size_t size)
+int vector_set_size(struct vector* vec, size_t size)
 {
+    if (vector_is_null(vec))
+        return 1;
     if (!vector_overflow(vec, size)) {
         vec->size = size;
         return 0;
     }
 
-    size_t capacity = vec->arr.size;
-    while (size > capacity) {
-        capacity = vec->growth(capacity);
+    size_t new_capacity = vec->arr.size;
+    while (size > new_capacity) {
+        new_capacity = vec->growth(new_capacity);
     }
 
-    void* buffer =
-        vec->alloc->realloc(vec->arr.buffer, vec->arr.memb_size * capacity);
+    void* buffer = vec->arr.alloc->realloc(vec->arr.buffer,
+                                           vec->arr.memb_size * new_capacity);
     if (!buffer)
-        return 1;
+        return 2;
 
     vec->size = size;
     vec->arr.buffer = buffer;
-    vec->arr.size = capacity;
+    vec->arr.size = new_capacity;
 
     return 0;
 }
 
-int vector_reserve(struct vector* vec, size_t capacity)
+int vector_set_capacity(struct vector* vec, size_t capacity)
 {
-    if (capacity == 0)
+    if (vector_is_null(vec))
         return 1;
+    if (capacity == 0)
+        return 3;
 
     void* buffer =
-        vec->alloc->realloc(vec->arr.buffer, vec->arr.memb_size * capacity);
+        vec->arr.alloc->realloc(vec->arr.buffer, vec->arr.memb_size * capacity);
     if (!buffer)
-        return 1;
+        return 2;
 
     vec->arr.buffer = buffer;
     vec->arr.size = capacity;
