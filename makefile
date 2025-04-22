@@ -105,13 +105,13 @@ clean-clangdb:
 	@rm -f compile_commands.json
 	@rm -rf .cache/clangd
 
-clean-docs:
+clean-doc:
 	@rm -rf doxygen
 	@rm -rf $(doc_dir)/build
 
 clean-pyvenv:
 	@rm -rf $(PYVENV)
 
-clean-all: clean clean-clangdb clean-docs clean-pyvenv
+clean-all: clean clean-clangdb clean-doc clean-pyvenv
 
-.PHONY: clean clean-clangdb clean-docs clean-pyvenv clean-all
+.PHONY: clean clean-clangdb clean-doc clean-pyvenv clean-all

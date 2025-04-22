@@ -3,7 +3,7 @@ dsa_list
 
 # docs
 doxygen/
-docs/build/
+doc/build/
 
 # python env
 venv
