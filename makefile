@@ -63,19 +63,19 @@ run-test: $(test_target)
 format:
 	@clang-format -i $(headers) $(sources) $(test)
 
-lint:
-	# exclude tests as generated code from criterion has too many warns
-	@clang-tidy $(headers) $(sources) -p . -- -std=$(CSTD)
+lint: clangdb
+	@# exclude tests as generated code from criterion has too many warns
+	@clang-tidy $(headers) $(sources) -p .
 
 clangdb:
 	@$(MAKE) clean
-	@bear -- make
+	@bear -- $(MAKE) $(source_objs) $(test_objs)
 
 doc: $(PYVENV)
 	@doxygen
 	@$(PYVENV)/bin/sphinx-build $(doc_dir)/source/ $(doc_dir)/build/
 
-.PHONY: run-test clangdb doc
+.PHONY: format lint clangdb doc
 
 # compilation rules
 $(lib_target): $(lib_objs) $(lib_core_objs) | $(build_dir)
@@ -114,4 +114,4 @@ clean-pyvenv:
 
 clean-all: clean clean-clangdb clean-docs clean-pyvenv
 
-.PHONY: clean clean-docs clean-clangdb clean-all
+.PHONY: clean clean-clangdb clean-docs clean-pyvenv clean-all
