@@ -1,9 +1,19 @@
+/**
+ * \file dsa/types/compare.h
+ * \brief Compare strategy type.
+ */
+
 #ifndef DSA_TYPES_COMPARE_H
 #define DSA_TYPES_COMPARE_H
 
-// a < b <-> int < 0
-// a > b <-> int > 0
-// a == b <-> int == 0
+/**
+ * \brief Compare strategy function pointer.
+ *
+ * Provides an interface for a comparison strategy between generic types.
+ * \retval <0 When a < b
+ * \retval >0 When a > b
+ * \retval =0 When a = b
+ */
 typedef int (*Compare)(const void *, const void *);
 
 #endif /* ifndef DSA_TYPES_COMPARE_H */

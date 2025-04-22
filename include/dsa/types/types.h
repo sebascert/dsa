@@ -1,3 +1,8 @@
+/**
+ * \file dsa/types/types.h
+ * \brief Types recopilation.
+ */
+
 #ifndef DSA_TYPES_H
 #define DSA_TYPES_H
 

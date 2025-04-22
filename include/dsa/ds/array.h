@@ -1,6 +1,6 @@
 /**
  * \file dsa/ds/array.h
- * \brief array data structure.
+ * \brief Array data structure.
  */
 
 #ifndef DSA_DS_ARRAY_H

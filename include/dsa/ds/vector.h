@@ -1,6 +1,6 @@
 /**
  * \file dsa/ds/vector.h
- * \brief vector data structure header.
+ * \brief Vector data structure header.
  */
 
 #ifndef DSA_DS_VECTOR_H
@@ -80,7 +80,7 @@ void vector_free(struct vector* vec);
 bool vector_is_null(const struct vector* vec);
 
 /**
- * \brief Create new vector from \ref array.
+ * \brief Create new vector from [array](\ref array).
  *
  * overwrites arr to null after vector creation.
  *
@@ -190,6 +190,7 @@ int vector_pop(struct vector* vec);
 /**
  * \brief Evaluate if size is greater than vector's capacity.
  *
+ * \param vec Vector.
  * \param size Test size.
  *
  * \return True if the vector is null or the size is greater than the vector's
@@ -204,6 +205,7 @@ bool vector_overflow(struct vector* vec, size_t size);
  * if the new size is less than current, the size is decreased to the new size,
  * but truncated elements remain unchanged in the underlying array.
  *
+ * \param vec Vector.
  * \param size New size.
  *
  * \retval 0 Size set succeeded.
@@ -219,6 +221,7 @@ int vector_set_size(struct vector* vec, size_t size);
  * new capacity, size is set to new the new capacity and remaining elements are
  * freed, if the given capacity is 0, an error is returned.
  *
+ * \param vec Vector.
  * \param capacity New capacity.
  *
  * \retval 0 Capacity set succeeded.
