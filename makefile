@@ -2,12 +2,14 @@
 args ?=
 
 # directories
-include_dir := include
-src_dir     := src
-test_dir    := test
-build_dir   := build
-script_dir  := script
-doc_dir     := doc
+include_dir     := include
+src_dir         := src
+test_dir        := test
+build_dir       := build
+script_dir      := script
+doc_dir         := doc
+doc_build       := $(doc_dir)/build
+doxygen_build   := $(doc_dir)/doxyxml
 
 # targets
 lib_target   := $(build_dir)/libdsa.a
@@ -72,8 +74,8 @@ clangdb:
 	@bear -- $(MAKE) $(source_objs) $(test_objs)
 
 doc: $(PYVENV)
-	@doxygen
-	@$(PYVENV)/bin/sphinx-build $(doc_dir)/source/ $(doc_dir)/build/
+	@cd $(doc_dir) && doxygen Doxyfile
+	@$(PYVENV)/bin/sphinx-build $(doc_dir) $(doc_build)
 
 .PHONY: format lint clangdb doc
 
@@ -106,8 +108,8 @@ clean-clangdb:
 	@rm -rf .cache/clangd
 
 clean-doc:
-	@rm -rf doxygen
-	@rm -rf $(doc_dir)/build
+	@rm -rf $(doxygen_build)
+	@rm -rf $(doc_build)
 
 clean-pyvenv:
 	@rm -rf $(PYVENV)

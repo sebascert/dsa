@@ -14,7 +14,7 @@ author = "Sebastian Certuche"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["breathe"]
-breathe_projects = {"dsa": "../../doxygen/xml"}
+breathe_projects = {"dsa": "doxyxml"}
 breathe_default_project = "dsa"
 
 templates_path = ["_templates"]
