@@ -44,7 +44,7 @@ void array_free(struct array* arr)
     memcpy(arr, &NULL_ARRAY, sizeof(struct array));
 }
 
-inline bool array_is_null(struct array* arr)
+inline bool array_is_null(const struct array* arr)
 {
     return !arr || !arr->buffer || arr->size == 0 || arr->memb_size == 0 ||
            !arr->alloc;

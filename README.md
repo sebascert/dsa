@@ -60,7 +60,7 @@ struct data_struct data_struct_new(/*fields...*/);
 struct data_struct data_struct_new_with_alloc(/*fields...*/, const struct* allocator);
 void data_struct_free(struct data_struct*);
 
-bool data_struct_is_null(struct data_struct*);
+bool data_struct_is_null(const struct data_struct*);
 
 type data_struct_function(struct data_struct*, /*args...*/);
 ```

@@ -68,7 +68,7 @@ void array_free(struct array *arr);
  *
  * \return True if the array is NULL, false otherwise.
  */
-bool array_is_null(struct array *arr);
+bool array_is_null(const struct array *arr);
 
 /**
  * \brief Swap elements at indices in array.
