@@ -9,6 +9,7 @@ from enum import Enum
 
 
 class dsa(Enum):
+    ds_array = "ds/array"
     ds_vector = "ds/vector"
 
 
@@ -17,7 +18,7 @@ def dsa_from_str(s: str) -> dsa | None:
 
 
 dependencies: dict[dsa, list[dsa]] = {
-    dsa.ds_vector: [],
+    dsa.ds_vector: [dsa.ds_array],
 }
 
 
