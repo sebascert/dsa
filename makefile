@@ -57,7 +57,7 @@ install: $(lib_target)
 
 run-test: $(test_target)
 	@echo "./$(test_target) $(args)"
-	@./$(test_target) $(ARGS)
+	@./$(test_target) $(args)
 
 .PHONY: all lib test install run-test
 
