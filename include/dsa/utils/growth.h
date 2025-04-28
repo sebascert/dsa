@@ -38,12 +38,27 @@ static inline size_t exponential_m_growth(size_t n)
 /**
  * \brief Complete binary tree growth strategy.
  *
+ * \param n Current size of a complete binary tree.
+ * \returns n * 2 + 1.
+ */
+static inline size_t complete_bintree_growth(size_t n)
+{
+    return n * 2 + 1;
+}
+
+/**
+ * \brief Aproximates to next complete binary tree growth strategy.
+ *
  * \param n Current size.
  * \returns n * 2 + 1.
  */
-static inline size_t complete_binary_tree_growth(size_t n)
+static inline size_t next_complete_bintree_growth(size_t n)
 {
-    return n * 2 + 1;
+    size_t res = 1;
+    while (n >= res) {
+        res = res * 2 + 1;
+    }
+    return res;
 }
 
 #endif /* ifndef DSA_UTILS_GROWTH_H */
