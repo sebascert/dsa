@@ -15,9 +15,15 @@
  * \brief Array data structure.
  *
  * An array structure serves as an array descriptor, containing a pointer to a
- * buffer, allocator, count of elements and size of elements.
+ * buffer, allocator, count of elements and size of elements. The struct
+ * definition must not be hidden.
  */
-struct array;
+struct array {
+    void *buffer;
+    size_t size;
+    size_t memb_size;
+    const struct allocator *const alloc;
+};
 
 /**
  * \brief Null array constant.
@@ -109,12 +115,5 @@ int array_swap(struct array *arr, size_t idx_a, size_t idx_b);
  */
 int array_swap_with_mbuffer(struct array *arr, void *memb_buffer, size_t idx_a,
                             size_t idx_b);
-
-struct array {
-    void *buffer;
-    size_t size;
-    size_t memb_size;
-    const struct allocator *const alloc;
-};
 
 #endif /* ifndef DSA_DS_ARRAY_H */

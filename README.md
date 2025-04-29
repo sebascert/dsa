@@ -29,9 +29,9 @@ make lib
 The interface for algorithms consists of declarations of Algorithm functions
 prefixed by `dsa_` namespace.
 
-The interface for data structures assumes that struct fields are never directly
-accessed regardless of them being hidden or not, declarations are prefixed by
-the data structure name.
+Unless the opposite is specified (ex: array), the interface for data structures
+assumes that struct fields are never directly accessed regardless of them being
+hidden or not, declarations are prefixed by the data structure name.
 
 Common types are found in `include/types` which have no namespace but are
 intended to avoid collisions, declarations in `include/utils` have static
