@@ -41,9 +41,11 @@ static void fail_alloc_free(void* buffer)
  * smaller size does nothing.
  */
 static const struct allocator fail_allocator = {
+    /// \cond
     .malloc = fail_alloc_malloc,
     .realloc = fail_alloc_realloc,
     .free = fail_alloc_free,
+    /// \cond
 };
 
 #endif /* ifndef DSA_UTILS_ALLOCATOR_H */
