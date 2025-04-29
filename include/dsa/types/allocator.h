@@ -26,9 +26,9 @@ struct allocator {
 };
 
 /**
- * \brief C STD library allocator structure constant
+ * \brief C STD library allocator structure constant.
  *
- * Contains the allocation functions provided in the C stdlib
+ * Contains the allocation functions provided in the C stdlib.
  */
 extern const struct allocator stdlib_allocator;
 
