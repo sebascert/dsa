@@ -20,7 +20,7 @@ struct array array_new(size_t size, size_t memb_size)
 struct array array_new_with_alloc(size_t size, size_t memb_size,
                                   const struct allocator* alloc)
 {
-    if (size == 0 || memb_size == 0)
+    if (size == 0 || memb_size == 0 || !alloc)
         return NULL_ARRAY;
 
     void* buffer = alloc->malloc(size * memb_size);
@@ -48,6 +48,20 @@ inline bool array_is_null(const struct array* arr)
 {
     return !arr || !arr->buffer || arr->size == 0 || arr->memb_size == 0 ||
            !arr->alloc;
+}
+
+struct array array_from_buffer(void* buffer, size_t size, size_t memb_size,
+                               const struct allocator* alloc)
+{
+    if (!buffer || size == 0 || memb_size == 0 || !alloc)
+        return NULL_ARRAY;
+
+    return (struct array){
+        .buffer = buffer,
+        .size = size,
+        .memb_size = memb_size,
+        .alloc = alloc,
+    };
 }
 
 int array_swap(struct array* arr, size_t idx_a, size_t idx_b)

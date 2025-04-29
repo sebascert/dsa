@@ -77,6 +77,19 @@ void array_free(struct array *arr);
 bool array_is_null(const struct array *arr);
 
 /**
+ * \brief Create new array from buffer.
+ *
+ * \param buffer Buffer of size (size * memb_size) bytes with given allocator.
+ * \param size Initial capacity of the array.
+ * \param memb_size Array member size.
+ * \param alloc Allocator.
+ *
+ * \return Created array, or NULL_ARRAY if any parameter is invalid.
+ */
+struct array array_from_buffer(void *buffer, size_t size, size_t memb_size,
+                               const struct allocator *alloc);
+
+/**
  * \brief Swap elements at indices in array.
  *
  * Elements are swapped by value.
