@@ -2,29 +2,26 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include <criterion/parameterized.h>
+#include <criterion/theories.h>
 
 #define suite utils_allocator
 
-ParameterizedTestParameters(suite, fail_allocator)
+TheoryDataPoints(suite, fail_allocator) = {
+    DataPoints(size_t, 0, 1, 2, 4, 5, 100),
+};
+Theory((size_t size), suite, fail_allocator)
 {
-    static size_t params[] = {0, 1, 2, 4, 5, 100};
-    return cr_make_param_array(size_t, params, sizeof(params) / sizeof(size_t));
-}
+    cr_assert(eq(ptr, fail_allocator.malloc(size), NULL));
+    cr_assert(eq(ptr, fail_allocator.realloc(NULL, size), NULL));
 
-ParameterizedTest(size_t* param, suite, fail_allocator)
-{
-    cr_assert(eq(ptr, fail_allocator.malloc(*param), NULL));
-    cr_assert(eq(ptr, fail_allocator.realloc(NULL, *param), NULL));
+    fail_alloc_realloc_ptr_size = size + 1;
+    cr_assert(eq(ptr, fail_allocator.realloc((void*)1, size), (void*)1));
+    fail_alloc_realloc_ptr_size = size;
+    cr_assert(eq(ptr, fail_allocator.realloc((void*)1, size), (void*)1));
 
-    fail_alloc_realloc_ptr_size = *param + 1;
-    cr_assert(eq(ptr, fail_allocator.realloc((void*)1, *param), (void*)1));
-    fail_alloc_realloc_ptr_size = *param;
-    cr_assert(eq(ptr, fail_allocator.realloc((void*)1, *param), (void*)1));
-
-    if (*param > 0) {
-        fail_alloc_realloc_ptr_size = *param - 1;
-        cr_assert(eq(ptr, fail_allocator.realloc((void*)1, *param), NULL));
+    if (size > 0) {
+        fail_alloc_realloc_ptr_size = size - 1;
+        cr_assert(eq(ptr, fail_allocator.realloc((void*)1, size), NULL));
     }
 }
 
