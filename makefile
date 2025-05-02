@@ -66,11 +66,10 @@ run-test: $(test_target)
 
 # utils rules
 format:
-	@clang-format -i $(headers) $(sources) $(test)
+	@clang-format -i $(headers) $(sources) $(test_sources)
 
 lint: $(CLANGDB)
-	@# exclude tests as generated code from criterion has too many warns
-	@clang-tidy $(headers) $(sources) -p .
+	@clang-tidy $(headers) $(sources) $(test_sources) -p .
 
 clangdb: clean-clangdb
 	@$(MAKE) $(CLANGDB)
