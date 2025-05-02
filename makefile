@@ -24,11 +24,12 @@ core_headers := $(shell find $(include_dir)/dsa/types $(include_dir)/dsa/utils -
 lib_headers  := $(addprefix $(include_dir)/dsa/, $(addsuffix .h, $(selected_dsa)))
 sources      := $(shell find $(src_dir) -name '*.c')
 core_sources := $(shell find $(src_dir)/utils -name '*.c')
-test         := $(shell find $(test_dir) -name '*.c')
+test_sources := $(shell find $(test_dir) -name '*.c')
 
 # objects
 source_objs   := $(sources:.c=.o)
-test_objs     := $(test:.c=.o)
+test_objs     := $(test_sources:.c=.o)
+objs          := $(source_objs) $(test_objs)
 
 lib_core_objs := $(core_sources:.c=.o)
 lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
@@ -42,6 +43,8 @@ CFLAGS    := -Wall -Wextra -g -std=$(CSTD) -I $(include_dir)
 MAKEFLAGS += --no-print-directory
 
 PYVENV    := .venv
+
+CLANGDB   := compile_commands.json
 
 PREFIX    := /usr/local
 
@@ -65,13 +68,12 @@ run-test: $(test_target)
 format:
 	@clang-format -i $(headers) $(sources) $(test)
 
-lint: clangdb
+lint: $(CLANGDB)
 	@# exclude tests as generated code from criterion has too many warns
 	@clang-tidy $(headers) $(sources) -p .
 
-clangdb:
-	@$(MAKE) clean
-	@bear -- $(MAKE) $(source_objs) $(test_objs)
+clangdb: clean-clangdb
+	@$(MAKE) $(CLANGDB)
 
 doc: $(PYVENV)
 	@cd $(doc_dir) && doxygen Doxyfile
@@ -98,13 +100,16 @@ $(PYVENV):
 	@virtualenv $(PYVENV)
 	@$(PYVENV)/bin/pip3 install -r requirements.txt
 
+$(CLANGDB): clean
+	@bear -- $(MAKE) $(objs)
+
 # clean rules
 clean:
 	@find . -name '*.o' -delete
 	@rm -rf $(build_dir)
 
 clean-clangdb:
-	@rm -f compile_commands.json
+	@rm -f $(CLANGDB)
 	@rm -rf .cache/clangd
 
 clean-doc:
