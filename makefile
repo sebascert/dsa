@@ -16,14 +16,14 @@ lib_target   := $(build_dir)/libdsa.a
 test_target  := $(build_dir)/dsa_test
 
 # selected dsa or empty if script fails
-selected_dsa := $(shell python3 $(script_dir)/selected_dsa.py dsa_list 2>/dev/null || echo)
+# selected_dsa := $(shell python3 $(script_dir)/selected_dsa.py dsa_list 2>/dev/null || echo)
 
 # sources and headers
 headers      := $(shell find $(include_dir) -name '*.h')
-core_headers := $(shell find $(include_dir)/dsa/types $(include_dir)/dsa/utils -name '*.h')
-lib_headers  := $(addprefix $(include_dir)/dsa/, $(addsuffix .h, $(selected_dsa)))
+core_headers := $(shell find $(include_dir)/dsa/core -name '*.h')
+# lib_headers  := $(addprefix $(include_dir)/dsa/, $(addsuffix .h, $(selected_dsa)))
 sources      := $(shell find $(src_dir) -name '*.c')
-core_sources := $(shell find $(src_dir)/utils -name '*.c')
+core_sources := $(shell find $(src_dir)/core -name '*.c')
 test_sources := $(shell find $(test_dir) -name '*.c')
 
 # objects
@@ -32,7 +32,7 @@ test_objs     := $(test_sources:.c=.o)
 objs          := $(source_objs) $(test_objs)
 
 lib_core_objs := $(core_sources:.c=.o)
-lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
+# lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
 
 # env setup
 CC        := gcc
@@ -55,7 +55,7 @@ test: $(test_target)
 
 install: $(lib_target)
 	@rm -rf $(PREFIX)/include/dsa/
-	@rsync -R $(core_headers) $(lib_headers) $(PREFIX)/
+	@rsync -R $(headers) $(PREFIX)/
 	@cp $(lib_target) $(PREFIX)/lib/
 
 run-test: $(test_target)
@@ -81,7 +81,7 @@ doc: $(PYVENV)
 .PHONY: format lint clangdb doc
 
 # compilation rules
-$(lib_target): $(lib_objs) $(lib_core_objs) | $(build_dir)
+$(lib_target): $(source_objs) | $(build_dir)
 	$(AR) rcs $@ $^
 	@echo "build lib to: $@"
 
