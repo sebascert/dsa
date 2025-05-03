@@ -6,7 +6,7 @@
 #ifndef DSA_DS_ARRAY_H
 #define DSA_DS_ARRAY_H
 
-#include "dsa/types/allocator.h"
+#include "dsa/core/types/allocator.h"
 
 #include <stdbool.h>
 #include <stddef.h>

@@ -1,4 +1,4 @@
-#include "dsa/types/allocator.h"
+#include "dsa/core/types/allocator.h"
 
 const struct allocator stdlib_allocator = {
     .malloc = malloc,

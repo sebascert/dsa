@@ -1,7 +1,7 @@
 #include "dsa/ds/array.h"
 
-#include "dsa/types/allocator.h"
-#include "dsa/utils/memory.h"
+#include "dsa/core/types/allocator.h"
+#include "dsa/core/utils/memory.h"
 
 #include <string.h>
 

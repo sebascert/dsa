@@ -1,8 +1,7 @@
 #include "dsa/ds/array.h"
 
-#include "dsa/types/allocator.h"
+#include "dsa/core/utils/memory.h"
 #include "dsa/utils/allocator.h"
-#include "dsa/utils/memory.h"
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>

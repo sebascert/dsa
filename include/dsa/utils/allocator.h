@@ -6,7 +6,7 @@
 #ifndef DSA_UTILS_ALLOCATOR_H
 #define DSA_UTILS_ALLOCATOR_H
 
-#include "dsa/types/allocator.h"
+#include "dsa/core/types/allocator.h"
 
 /** \brief Size of the next ptr passed to fail_allocator->realloc
  *

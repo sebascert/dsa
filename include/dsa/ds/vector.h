@@ -6,9 +6,9 @@
 #ifndef DSA_DS_VECTOR_H
 #define DSA_DS_VECTOR_H
 
+#include "dsa/core/types/allocator.h"
+#include "dsa/core/types/growth.h"
 #include "dsa/ds/array.h"
-#include "dsa/types/allocator.h"
-#include "dsa/types/growth.h"
 
 #include <stdbool.h>
 

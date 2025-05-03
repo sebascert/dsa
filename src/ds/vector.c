@@ -1,6 +1,6 @@
 #include "dsa/ds/vector.h"
 
-#include "dsa/utils/memory.h"
+#include "dsa/core/utils/memory.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
