@@ -1,10 +1,10 @@
 /**
- * \file dsa/utils/memory.h
- * \brief Memory operation utilities.
+ * \file dsa/core/utils/memory.h
+ * \brief Memory utilities.
  */
 
-#ifndef DSA_UTILS_MEMORY_H
-#define DSA_UTILS_MEMORY_H
+#ifndef DSA_CORE_UTILS_MEMORY_H
+#define DSA_CORE_UTILS_MEMORY_H
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -19,7 +19,6 @@
 #define buf_idx(buffer, idx, memb_size) \
     ((void *)((unsigned char *)(buffer) + ((idx) * (memb_size))))
 
-// increment void pointer buffer by i by memb_size
 /**
  * \brief Increment by i elements lvalue buffer of memb_size size elements.
  *
@@ -29,4 +28,4 @@
  */
 #define buf_inc(buffer, i, memb_size) (buffer) = buf_idx(buffer, i, memb_size)
 
-#endif /* ifndef DSA_UTILS_MEMORY_H */
+#endif /* ifndef DSA_CORE_UTILS_MEMORY_H */

@@ -1,10 +1,10 @@
 /**
- * \file dsa/types/growth.h
+ * \file dsa/core/types/growth.h
  * \brief Growth strategy type.
  */
 
-#ifndef DSA_TYPES_GROWTH_H
-#define DSA_TYPES_GROWTH_H
+#ifndef DSA_CORE_TYPES_GROWTH_H
+#define DSA_CORE_TYPES_GROWTH_H
 
 #include <stddef.h>
 
@@ -16,4 +16,4 @@
  */
 typedef size_t (*Growth)(size_t);
 
-#endif /* ifndef DSA_TYPES_GROWTH_H */
+#endif /* ifndef DSA_CORE_TYPES_GROWTH_H */

@@ -1,10 +1,10 @@
 /**
- * \file dsa/types/allocator.h
+ * \file dsa/core/types/allocator.h
  * \brief Allocator type.
  */
 
-#ifndef DSA_TYPES_ALLOCATOR_H
-#define DSA_TYPES_ALLOCATOR_H
+#ifndef DSA_CORE_TYPES_ALLOCATOR_H
+#define DSA_CORE_TYPES_ALLOCATOR_H
 
 #include <memory.h>
 #include <stdlib.h>
@@ -32,4 +32,4 @@ struct allocator {
  */
 extern const struct allocator stdlib_allocator;
 
-#endif /* ifndef DSA_TYPES_ALLOCATOR_H */
+#endif /* ifndef DSA_CORE_TYPES_ALLOCATOR_H */

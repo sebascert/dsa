@@ -3,7 +3,7 @@
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 
-#define suite utils_memory
+#define suite core_utils_memory
 
 #define BUFFER_SIZE 5
 #define BUFFER_ELEMS 0, 1, 2, 3, 4

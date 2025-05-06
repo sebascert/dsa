@@ -1,10 +1,10 @@
 /**
- * \file dsa/types/compare.h
+ * \file dsa/core/types/compare.h
  * \brief Compare strategy type.
  */
 
-#ifndef DSA_TYPES_COMPARE_H
-#define DSA_TYPES_COMPARE_H
+#ifndef DSA_CORE_TYPES_COMPARE_H
+#define DSA_CORE_TYPES_COMPARE_H
 
 /**
  * \brief Compare strategy function pointer.
@@ -16,4 +16,4 @@
  */
 typedef int (*Compare)(const void *, const void *);
 
-#endif /* ifndef DSA_TYPES_COMPARE_H */
+#endif /* ifndef DSA_CORE_TYPES_COMPARE_H */
