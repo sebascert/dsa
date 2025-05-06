@@ -20,12 +20,13 @@ Test(suite, new)
 {
     struct array arr;
 
-    // assert invalid arg cases
+    // invalid arg cases
     set_array(&arr, array_new(0, 1));
     cr_assert(array_is_null(&arr));
     set_array(&arr, array_new(1, 0));
     cr_assert(array_is_null(&arr));
 
+    // valid args case evaluates non null
     set_array(&arr, array_new(1, 1));
     cr_assert(not(array_is_null(&arr)));
     array_free(&arr);
@@ -35,7 +36,7 @@ Test(suite, new_with_alloc)
 {
     struct array arr;
 
-    // assert invalid arg cases
+    // invalid arg cases
     set_array(&arr, array_new_with_alloc(0, 1, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
     set_array(&arr, array_new_with_alloc(1, 0, &stdlib_allocator));
@@ -43,10 +44,11 @@ Test(suite, new_with_alloc)
     set_array(&arr, array_new_with_alloc(1, 0, NULL));
     cr_assert(array_is_null(&arr));
 
-    // assert invalid allocation
+    // invalid allocation
     set_array(&arr, array_new_with_alloc(1, 1, &fail_allocator));
     cr_assert(array_is_null(&arr));
 
+    // valid args case evaluates non null
     set_array(&arr, array_new_with_alloc(1, 1, &stdlib_allocator));
     cr_assert(not(array_is_null(&arr)));
     array_free(&arr);
@@ -56,11 +58,11 @@ Test(suite, free)
 {
     struct array arr;
 
-    // no signal raised
+    // no signal raised upon freeing null array
     set_array(&arr, NULL_ARRAY);
     array_free(&arr);
 
-    // assert array is nulled after free
+    // array is nulled after free
     set_array(&arr, array_new(1, 1));
     array_free(&arr);
     cr_assert(array_is_null(&arr));
@@ -68,6 +70,7 @@ Test(suite, free)
 
 Test(suite, is_null)
 {
+    // null constant evaluates to null
     cr_assert(array_is_null(&NULL_ARRAY));
 }
 
@@ -76,7 +79,7 @@ Test(suite, from_buffer)
     char buffer[1];
     struct array arr;
 
-    // invalid arguments
+    // invalid arg cases
     set_array(&arr, array_from_buffer(NULL, 1, 1, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
     set_array(&arr, array_from_buffer(&buffer, 0, 1, &stdlib_allocator));
@@ -86,6 +89,7 @@ Test(suite, from_buffer)
     set_array(&arr, array_from_buffer(&buffer, 1, 1, NULL));
     cr_assert(array_is_null(&arr));
 
+    // valid args case evaluates non null
     set_array(&arr, array_from_buffer(&buffer, 1, 1, &stdlib_allocator));
     cr_assert(not(array_is_null(&arr)));
 }
@@ -94,6 +98,7 @@ Test(suite, swap)
 {
     struct array arr = array_new(1, 1);
 
+    // exit codes
     cr_assert(eq(int, array_swap(&arr, 0, 0), 0));
     cr_assert(eq(int, array_swap(NULL, 0, 0), 1));
     cr_assert(eq(int, array_swap(&arr, 0, 1), 2));
@@ -105,6 +110,7 @@ Test(suite, swap_with_mbuffer)
     char memb_buffer;
     struct array arr = array_new(1, 1);
 
+    // exit code cases
     cr_assert(eq(int, array_swap_with_mbuffer(&arr, &memb_buffer, 0, 0), 0));
     cr_assert(eq(int, array_swap_with_mbuffer(NULL, &memb_buffer, 0, 0), 1));
     cr_assert(eq(int, array_swap_with_mbuffer(&arr, &memb_buffer, 0, 1), 2));
@@ -112,6 +118,7 @@ Test(suite, swap_with_mbuffer)
     cr_assert(eq(int, array_swap_with_mbuffer(&arr, NULL, 0, 0), 3));
 }
 
+// test the swap functions on different given memb_size member size
 #define SWAP_TEST_BUFFER_SIZE 5
 #define BUFFER_INDICES 0, 1, 2, 3, 4
 #define SWAP_TEST(memb_size)                                               \
@@ -136,6 +143,7 @@ Test(suite, swap_with_mbuffer)
         memcpy(original_idx0, idx0_ptr, memb_size);                        \
         memcpy(original_idx1, idx1_ptr, memb_size);                        \
                                                                            \
+        /*swap correctness*/                                               \
         array_swap(&arr, idx0, idx1);                                      \
         cr_assert(eq(chr[memb_size], idx1_ptr, original_idx0));            \
         cr_assert(eq(chr[memb_size], idx0_ptr, original_idx1));            \

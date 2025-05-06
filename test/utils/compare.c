@@ -8,6 +8,21 @@
 
 #define suite utils_compare
 
+// test the compare function of given type func, by the given __VA_ARGS__
+#define COMPARE_THEORY_DEF(type, func, ...)                           \
+    TheoryDataPoints(suite, func) = {                                 \
+        DataPoints(type, __VA_ARGS__),                                \
+        DataPoints(type, __VA_ARGS__),                                \
+    };                                                                \
+                                                                      \
+    Theory((type arg0, type arg1), suite, func)                       \
+    {                                                                 \
+        /*test against this implementation*/                          \
+        int expected = (arg0 == arg1) ? 0 : ((arg0 > arg1) ? 1 : -1); \
+        cr_assert(eq(int, func(&arg0, &arg1), expected));             \
+        cr_assert(eq(int, func(&arg1, &arg0), -expected));            \
+    }
+
 static COMPARE_BTYPE_DEF(int, compare_int_theory);
 static COMPARE_BTYPE_DEF(float, compare_float_theory);
 static COMPARE_BTYPE_DEF(double, compare_double_theory);
@@ -20,19 +35,6 @@ static COMPARE_BTYPE_DEF(unsigned char, compare_uchar_theory);
 static COMPARE_BTYPE_DEF(unsigned short, compare_ushort_theory);
 static COMPARE_BTYPE_DEF(unsigned long, compare_ulong_theory);
 static COMPARE_BTYPE_DEF(unsigned long long, compare_ulonglong_theory);
-
-#define COMPARE_THEORY_DEF(type, func, ...)                           \
-    TheoryDataPoints(suite, func) = {                                 \
-        DataPoints(type, __VA_ARGS__),                                \
-        DataPoints(type, __VA_ARGS__),                                \
-    };                                                                \
-                                                                      \
-    Theory((type arg0, type arg1), suite, func)                       \
-    {                                                                 \
-        int expected = (arg0 == arg1) ? 0 : ((arg0 > arg1) ? 1 : -1); \
-        cr_assert(eq(int, func(&arg0, &arg1), expected));             \
-        cr_assert(eq(int, func(&arg1, &arg0), -expected));            \
-    }
 
 COMPARE_THEORY_DEF(int, compare_int_theory, INT_MAX, INT_MIN, -1, 0, 1, 42, -99)
 
