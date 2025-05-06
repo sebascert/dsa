@@ -122,13 +122,12 @@ Test(suite, swap_with_mbuffer)
 #define SWAP_TEST_BUFFER_SIZE 5
 #define BUFFER_INDICES 0, 1, 2, 3, 4
 #define SWAP_TEST(memb_size)                                               \
-    TheoryDataPoints(suite, swap_##memb_size##byte_elem_theory) = {        \
+    TheoryDataPoints(suite, swap_##memb_size##byte_elem) = {               \
         DataPoints(size_t, BUFFER_INDICES),                                \
         DataPoints(size_t, BUFFER_INDICES),                                \
     };                                                                     \
                                                                            \
-    Theory((size_t idx0, size_t idx1), suite,                              \
-           swap_##memb_size##byte_elem_theory)                             \
+    Theory((size_t idx0, size_t idx1), suite, swap_##memb_size##byte_elem) \
     {                                                                      \
         struct array arr = array_new(SWAP_TEST_BUFFER_SIZE, memb_size);    \
                                                                            \
