@@ -99,7 +99,8 @@ $(PYVENV):
 	@virtualenv $(PYVENV)
 	@$(PYVENV)/bin/pip3 install -r requirements.txt
 
-$(CLANGDB): clean
+$(CLANGDB):
+	@$(MAKE) clean
 	@bear -- $(MAKE) $(objs)
 
 # clean rules
