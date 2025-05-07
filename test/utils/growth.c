@@ -2,33 +2,47 @@
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
-#include <criterion/parameterized.h>
+#include <criterion/theories.h>
 
 #define suite utils_growth
 
+// struct size must remain less than sizeof(uint64_t)
 struct growth_tc {
-    size_t size;
-    size_t exp;
-    size_t exp_m;
-    size_t bintree;
-    size_t next_bintree;
+    unsigned int curr;
+    unsigned int next;
 };
 
-ParameterizedTestParameters(suite, strategies)
+TheoryDataPoints(suite, exponential_growth) = {
+    DataPoints(struct growth_tc, {0, 0}, {1, 2}, {2, 4}, {5, 10}, {8, 16}),
+};
+Theory((struct growth_tc tc), suite, exponential_growth)
 {
-    static struct growth_tc params[] = {
-        {0, 0, 0, 1, 1},    {1, 2, 3, 3, 3},      {2, 4, 6, 5, 3},
-        {5, 10, 15, 11, 7}, {10, 20, 30, 21, 15}, {15, 30, 45, 31, 31},
-    };
-    return cr_make_param_array(struct growth_tc, params,
-                               sizeof(params) / sizeof(struct growth_tc));
+    cr_assert(eq(sz, exponential_growth(tc.curr), tc.next));
 }
-ParameterizedTest(struct growth_tc* tc, suite, strategies)
+
+TheoryDataPoints(suite, exponential_m_growth) = {
+    DataPoints(struct growth_tc, {0, 0}, {1, 1}, {2, 2}, {5, 5}, {8, 8}),
+};
+Theory((struct growth_tc tc), suite, exponential_m_growth)
 {
-    cr_assert(eq(sz, exponential_growth(tc->size), tc->exp));
-    cr_assert(eq(sz, exponential_m_growth(tc->size), tc->exp_m));
-    cr_assert(eq(sz, complete_bintree_growth(tc->size), tc->bintree));
-    cr_assert(eq(sz, next_complete_bintree_growth(tc->size), tc->next_bintree));
+    cr_assert(
+        eq(sz, exponential_m_growth(tc.curr), tc.curr * EXPONENTIAL_BASE_M));
+}
+
+TheoryDataPoints(suite, complete_bintree_growth) = {
+    DataPoints(struct growth_tc, {0, 1}, {1, 3}, {2, 5}, {5, 11}, {8, 17}),
+};
+Theory((struct growth_tc tc), suite, complete_bintree_growth)
+{
+    cr_assert(eq(sz, complete_bintree_growth(tc.curr), tc.next));
+}
+
+TheoryDataPoints(suite, next_complete_bintree_growth) = {
+    DataPoints(struct growth_tc, {0, 1}, {1, 3}, {2, 3}, {4, 7}, {8, 15}),
+};
+Theory((struct growth_tc tc), suite, next_complete_bintree_growth)
+{
+    cr_assert(eq(sz, next_complete_bintree_growth(tc.curr), tc.next));
 }
 
 #undef suite
