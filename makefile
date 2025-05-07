@@ -2,14 +2,15 @@
 args ?=
 
 # directories
-include_dir     := include
-src_dir         := src
-test_dir        := test
-build_dir       := build
-script_dir      := script
-doc_dir         := doc
-doc_build       := $(doc_dir)/build
-doxygen_build   := $(doc_dir)/doxyxml
+include_dir         := include
+src_dir             := src
+test_include_dir    := test/include
+test_dir            := test
+build_dir           := build
+script_dir          := script
+doc_dir             := doc
+doc_build           := $(doc_dir)/build
+doxygen_build       := $(doc_dir)/doxyxml
 
 # targets
 lib_target   := $(build_dir)/libdsa.a
@@ -35,10 +36,11 @@ lib_core_objs := $(core_sources:.c=.o)
 # lib_objs      := $(addprefix $(src_dir)/, $(addsuffix .o, $(selected_dsa)))
 
 # env setup
-CC        := gcc
-CSTD      := c99
-AR        := ar
-CFLAGS    := -Wall -Wextra -g -std=$(CSTD) -I $(include_dir)
+CC          := gcc
+CSTD        := c99
+AR          := ar
+CFLAGS      := -Wall -Wextra -g -std=$(CSTD) -I $(include_dir)
+TEST_CFLAGS := -I $(test_include_dir)
 
 MAKEFLAGS += --no-print-directory
 
@@ -88,6 +90,9 @@ $(lib_target): $(source_objs) | $(build_dir)
 $(test_target): $(source_objs) $(test_objs) | $(build_dir)
 	$(CC) $(CFLAGS) -lcriterion $(source_objs) $(test_objs) -o $@
 	@echo "build test to: $@"
+
+$(test_dir)/%.o: $(test_dir)/%.c
+	$(CC) $(CFLAGS) $(TEST_CFLAGS) -c $< -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
