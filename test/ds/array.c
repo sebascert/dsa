@@ -2,6 +2,7 @@
 
 #include "dsa/core/utils/memory.h"
 #include "dsa/utils/allocator.h"
+#include "dsa/utils/memory.h"
 
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
@@ -11,23 +12,20 @@
 
 #define suite ds_array
 
-void set_array(struct array* arr, struct array val)
-{
-    memcpy(arr, &val, sizeof(struct array));
-}
+static MEMCPY_TYPE_DEF(struct array, cpyarr);
 
 Test(suite, new)
 {
     struct array arr;
 
     // invalid arg cases
-    set_array(&arr, array_new(0, 1));
+    cpyarr(&arr, array_new(0, 1));
     cr_assert(array_is_null(&arr));
-    set_array(&arr, array_new(1, 0));
+    cpyarr(&arr, array_new(1, 0));
     cr_assert(array_is_null(&arr));
 
     // valid args case evaluates non null
-    set_array(&arr, array_new(1, 1));
+    cpyarr(&arr, array_new(1, 1));
     cr_assert(not(array_is_null(&arr)));
     array_free(&arr);
 }
@@ -37,19 +35,19 @@ Test(suite, new_with_alloc)
     struct array arr;
 
     // invalid arg cases
-    set_array(&arr, array_new_with_alloc(0, 1, &stdlib_allocator));
+    cpyarr(&arr, array_new_with_alloc(0, 1, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
-    set_array(&arr, array_new_with_alloc(1, 0, &stdlib_allocator));
+    cpyarr(&arr, array_new_with_alloc(1, 0, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
-    set_array(&arr, array_new_with_alloc(1, 0, NULL));
+    cpyarr(&arr, array_new_with_alloc(1, 0, NULL));
     cr_assert(array_is_null(&arr));
 
     // invalid allocation
-    set_array(&arr, array_new_with_alloc(1, 1, &fail_allocator));
+    cpyarr(&arr, array_new_with_alloc(1, 1, &fail_allocator));
     cr_assert(array_is_null(&arr));
 
     // valid args case evaluates non null
-    set_array(&arr, array_new_with_alloc(1, 1, &stdlib_allocator));
+    cpyarr(&arr, array_new_with_alloc(1, 1, &stdlib_allocator));
     cr_assert(not(array_is_null(&arr)));
     array_free(&arr);
 }
@@ -59,11 +57,11 @@ Test(suite, free)
     struct array arr;
 
     // no signal raised upon freeing null array
-    set_array(&arr, NULL_ARRAY);
+    cpyarr(&arr, NULL_ARRAY);
     array_free(&arr);
 
     // array is nulled after free
-    set_array(&arr, array_new(1, 1));
+    cpyarr(&arr, array_new(1, 1));
     array_free(&arr);
     cr_assert(array_is_null(&arr));
 }
@@ -80,17 +78,17 @@ Test(suite, from_buffer)
     struct array arr;
 
     // invalid arg cases
-    set_array(&arr, array_from_buffer(NULL, 1, 1, &stdlib_allocator));
+    cpyarr(&arr, array_from_buffer(NULL, 1, 1, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
-    set_array(&arr, array_from_buffer(&buffer, 0, 1, &stdlib_allocator));
+    cpyarr(&arr, array_from_buffer(&buffer, 0, 1, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
-    set_array(&arr, array_from_buffer(&buffer, 1, 0, &stdlib_allocator));
+    cpyarr(&arr, array_from_buffer(&buffer, 1, 0, &stdlib_allocator));
     cr_assert(array_is_null(&arr));
-    set_array(&arr, array_from_buffer(&buffer, 1, 1, NULL));
+    cpyarr(&arr, array_from_buffer(&buffer, 1, 1, NULL));
     cr_assert(array_is_null(&arr));
 
     // valid args case evaluates non null
-    set_array(&arr, array_from_buffer(&buffer, 1, 1, &stdlib_allocator));
+    cpyarr(&arr, array_from_buffer(&buffer, 1, 1, &stdlib_allocator));
     cr_assert(not(array_is_null(&arr)));
 }
 
@@ -126,7 +124,6 @@ Test(suite, swap_with_mbuffer)
         DataPoints(size_t, BUFFER_INDICES),                                \
         DataPoints(size_t, BUFFER_INDICES),                                \
     };                                                                     \
-                                                                           \
     Theory((size_t idx0, size_t idx1), suite, swap_##memb_size##byte_elem) \
     {                                                                      \
         struct array arr = array_new(SWAP_TEST_BUFFER_SIZE, memb_size);    \
