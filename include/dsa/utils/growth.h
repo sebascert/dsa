@@ -47,7 +47,7 @@ static inline size_t complete_bintree_growth(size_t n)
 }
 
 /**
- * \brief Aproximates to next complete binary tree growth strategy.
+ * \brief Approximates to next complete binary tree growth strategy.
  *
  * \param n Current size.
  * \returns n * 2 + 1.
@@ -60,5 +60,7 @@ static inline size_t next_complete_bintree_growth(size_t n)
     }
     return res;
 }
+
+#define DEFAULT_GROWTH exponential_growth
 
 #endif /* ifndef DSA_UTILS_GROWTH_H */
