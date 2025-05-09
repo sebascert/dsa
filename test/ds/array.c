@@ -1,13 +1,16 @@
 #include "dsa/ds/array.h"
 
 #include "dsa/core/utils/memory.h"
+#include "dsa/test_utils/assertions.h"
 #include "dsa/utils/allocator.h"
 #include "dsa/utils/memory.h"
 
 #include <criterion/criterion.h>
+#include <criterion/internal/new_asserts.h>
 #include <criterion/new/assert.h>
 #include <criterion/theories.h>
 
+#include <stdlib.h>
 #include <string.h>
 
 #define suite ds_array
@@ -101,6 +104,8 @@ Test(suite, swap)
     cr_assert(eq(int, array_swap(NULL, 0, 0), 1));
     cr_assert(eq(int, array_swap(&arr, 0, 1), 2));
     cr_assert(eq(int, array_swap(&arr, 1, 0), 2));
+
+    array_free(&arr);
 }
 
 Test(suite, swap_with_mbuffer)
@@ -114,52 +119,66 @@ Test(suite, swap_with_mbuffer)
     cr_assert(eq(int, array_swap_with_mbuffer(&arr, &memb_buffer, 0, 1), 2));
     cr_assert(eq(int, array_swap_with_mbuffer(&arr, &memb_buffer, 1, 0), 2));
     cr_assert(eq(int, array_swap_with_mbuffer(&arr, NULL, 0, 0), 3));
+
+    array_free(&arr);
 }
 
 // test the swap functions on different given memb_size member size
 #define SWAP_TEST_BUFFER_SIZE 5
 #define BUFFER_INDICES 0, 1, 2, 3, 4
-#define SWAP_TEST(memb_size)                                               \
-    TheoryDataPoints(suite, swap_##memb_size##byte_elem) = {               \
-        DataPoints(size_t, BUFFER_INDICES),                                \
-        DataPoints(size_t, BUFFER_INDICES),                                \
-    };                                                                     \
-    Theory((size_t idx0, size_t idx1), suite, swap_##memb_size##byte_elem) \
-    {                                                                      \
-        struct array arr = array_new(SWAP_TEST_BUFFER_SIZE, memb_size);    \
-                                                                           \
-        for (size_t i = 0; i < SWAP_TEST_BUFFER_SIZE; i++) {               \
-            memset(buf_idx(arr.buffer, i, memb_size), 'a' + i, memb_size); \
-        }                                                                  \
-                                                                           \
-        void* idx0_ptr = buf_idx(arr.buffer, idx0, memb_size);             \
-        void* idx1_ptr = buf_idx(arr.buffer, idx1, memb_size);             \
-        char memb_buffer[memb_size];                                       \
-        char original_idx0[memb_size], original_idx1[memb_size];           \
-        memcpy(original_idx0, idx0_ptr, memb_size);                        \
-        memcpy(original_idx1, idx1_ptr, memb_size);                        \
-                                                                           \
-        /*swap correctness*/                                               \
-        array_swap(&arr, idx0, idx1);                                      \
-        cr_assert(eq(chr[memb_size], idx1_ptr, original_idx0));            \
-        cr_assert(eq(chr[memb_size], idx0_ptr, original_idx1));            \
-        array_swap(&arr, idx0, idx1);                                      \
-        cr_assert(eq(chr[memb_size], idx0_ptr, original_idx0));            \
-        cr_assert(eq(chr[memb_size], idx1_ptr, original_idx1));            \
-        array_swap_with_mbuffer(&arr, memb_buffer, idx0, idx1);            \
-        cr_assert(eq(chr[memb_size], idx1_ptr, original_idx0));            \
-        cr_assert(eq(chr[memb_size], idx0_ptr, original_idx1));            \
-        array_swap_with_mbuffer(&arr, memb_buffer, idx0, idx1);            \
-        cr_assert(eq(chr[memb_size], idx0_ptr, original_idx0));            \
-        cr_assert(eq(chr[memb_size], idx1_ptr, original_idx1));            \
+#define SWAP_THEORY_DEF(memb_size)                                          \
+    static struct array swap_##memb_size##byte_arr;                         \
+    static void swap_##memb_size##byte_init()                               \
+    {                                                                       \
+        struct array* arr = &swap_##memb_size##byte_arr;                    \
+        cpyarr(arr, array_new(SWAP_TEST_BUFFER_SIZE, memb_size));           \
+                                                                            \
+        for (size_t i = 0; i < SWAP_TEST_BUFFER_SIZE; i++) {                \
+            memset(buf_idx(arr->buffer, i, memb_size), 'a' + i, memb_size); \
+        }                                                                   \
+    }                                                                       \
+    static void swap_##memb_size##byte_fini()                               \
+    {                                                                       \
+        array_free(&swap_##memb_size##byte_arr);                            \
+    }                                                                       \
+    TheoryDataPoints(suite, swap_##memb_size##byte) = {                     \
+        DataPoints(size_t, BUFFER_INDICES),                                 \
+        DataPoints(size_t, BUFFER_INDICES),                                 \
+    };                                                                      \
+    Theory((size_t idx0, size_t idx1), suite, swap_##memb_size##byte,       \
+           .init = swap_##memb_size##byte_init,                             \
+           .fini = swap_##memb_size##byte_fini)                             \
+    {                                                                       \
+        struct array* arr = &swap_##memb_size##byte_arr;                    \
+                                                                            \
+        void* idx0_ptr = buf_idx(arr->buffer, idx0, memb_size);             \
+        void* idx1_ptr = buf_idx(arr->buffer, idx1, memb_size);             \
+        char memb_buffer[memb_size];                                        \
+        char original_idx0[memb_size], original_idx1[memb_size];            \
+        memcpy(original_idx0, idx0_ptr, memb_size);                         \
+        memcpy(original_idx1, idx1_ptr, memb_size);                         \
+                                                                            \
+        /*swap correctness*/                                                \
+        array_swap(arr, idx0, idx1);                                        \
+        cr_assert_eq_mem(idx1_ptr, original_idx0, memb_size);               \
+        cr_assert_eq_mem(idx0_ptr, original_idx1, memb_size);               \
+        array_swap(arr, idx0, idx1);                                        \
+        cr_assert_eq_mem(idx0_ptr, original_idx0, memb_size);               \
+        cr_assert_eq_mem(idx1_ptr, original_idx1, memb_size);               \
+        array_swap_with_mbuffer(arr, memb_buffer, idx0, idx1);              \
+        cr_assert_eq_mem(idx1_ptr, original_idx0, memb_size);               \
+        cr_assert_eq_mem(idx0_ptr, original_idx1, memb_size);               \
+        array_swap_with_mbuffer(arr, memb_buffer, idx0, idx1);              \
+        cr_assert_eq_mem(idx0_ptr, original_idx0, memb_size);               \
+        cr_assert_eq_mem(idx1_ptr, original_idx1, memb_size);               \
     }
 
-SWAP_TEST(1)
-SWAP_TEST(2)
-SWAP_TEST(30)
-SWAP_TEST(64)
-SWAP_TEST(100)
-SWAP_TEST(128)
-SWAP_TEST(129)
+SWAP_THEORY_DEF(1)
+SWAP_THEORY_DEF(2)
+SWAP_THEORY_DEF(30)
+SWAP_THEORY_DEF(64)
+SWAP_THEORY_DEF(100)
+SWAP_THEORY_DEF(128)
+SWAP_THEORY_DEF(129)
 
 #undef suite
