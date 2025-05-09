@@ -168,16 +168,21 @@ int vector_pop(struct vector* vec)
     return vector_remove(vec, vec->size - 1);
 }
 
-inline bool vector_overflow(struct vector* vec, size_t size)
+size_t vector_get_size(struct vector* vec)
 {
-    return vector_is_null(vec) || size > vec->arr.size;
+    return vec->size;
+}
+
+size_t vector_get_capacity(struct vector* vec)
+{
+    return vec->arr.size;
 }
 
 int vector_set_size(struct vector* vec, size_t size)
 {
     if (vector_is_null(vec))
         return 1;
-    if (!vector_overflow(vec, size)) {
+    if (size <= vec->arr.size) {
         vec->size = size;
         return 0;
     }

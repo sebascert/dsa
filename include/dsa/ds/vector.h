@@ -188,15 +188,22 @@ int vector_append(struct vector* vec, const void* elem);
 int vector_pop(struct vector* vec);
 
 /**
- * \brief Evaluate if size is greater than vector's capacity.
+ * \brief Get vector size (count of elements).
  *
  * \param vec Vector.
- * \param size Test size.
  *
- * \return True if the vector is null or the size is greater than the vector's
- * capacity, false otherwise.
+ * \return Vector size.
  */
-bool vector_overflow(struct vector* vec, size_t size);
+size_t vector_get_size(struct vector* vec);
+
+/**
+ * \brief Get vector capacity (underlying size of vector's array).
+ *
+ * \param vec Vector.
+ *
+ * \return Vector capacity.
+ */
+size_t vector_get_capacity(struct vector* vec);
 
 /**
  * \brief Set vector size.
