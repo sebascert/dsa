@@ -95,7 +95,7 @@ Test(suite, from_buffer)
     cr_assert(not(array_is_null(&arr)));
 }
 
-Test(suite, swap)
+Test(suite, swap_api)
 {
     struct array arr = array_new(1, 1);
 
@@ -108,7 +108,7 @@ Test(suite, swap)
     array_free(&arr);
 }
 
-Test(suite, swap_with_mbuffer)
+Test(suite, swap_with_mbuffer_api)
 {
     char memb_buffer;
     struct array arr = array_new(1, 1);
